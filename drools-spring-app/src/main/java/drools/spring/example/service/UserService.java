@@ -1,5 +1,8 @@
 package drools.spring.example.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import drools.spring.example.exception.CustomException;
+import drools.spring.example.model.Role;
 import drools.spring.example.model.User;
 import drools.spring.example.repository.UserRepository;
 import drools.spring.example.security.jwt.JwtTokenProvider;
@@ -40,11 +44,13 @@ public class UserService {
 		}
 	}
 
-	public String signup(User user) {
+	public void signup(User user) {
+		System.out.println(user);
 		if (!userRepository.existsByUsername(user.getUsername())) {
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setPassword(passwordEncoder.encode("password"));
+			user.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_DOCTOR)));
+			System.out.println(user);
 			userRepository.save(user);
-			return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
 		} else {
 			throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
 		}

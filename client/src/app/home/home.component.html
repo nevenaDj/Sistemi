@@ -1,0 +1,38 @@
+<!-- Start Header Area -->
+<header class="default-header">
+  <div class="container">
+    <div class="header-wrap">
+      <div class="header-top d-flex justify-content-between align-items-center q">
+        <div class="logo">
+          <a><img src="../../assets/logo.png" alt=""></a>
+        </div>
+        <div class="main-menubar d-flex align-items-center">
+          <nav>
+            <ul class="nav navbar-nav f">
+            <li class="dropdown" dropdown [dropdownToggle]="true" >
+              <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Dodaj <span class="caret"></span></a>
+              <ul class="dropdown-menu" >
+                  <li cclass="dropdown-item"><a [routerLink]="['/home/patient']">Pacijenta</a></li>
+                  <li class="dropdown-item"><a [routerLink]="['/home']">Bolest</a></li>
+              </ul>
+            </li>
+            <li class="dropdown" dropdown [dropdownToggle]="true" >
+                <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Pretrazi <span class="caret"></span></a>
+                <ul class="dropdown-menu dropdown-button" >
+                    <li class="dropdown-button"><a [routerLink]="['/home']">Pacijente</a></li>
+                    <li class="dropdown-button"><a [routerLink]="['/home']">Bolesti</a></li>
+                </ul>
+              </li>
+              <li><a [routerLink]="['/home/password']">Promeni lozinku</a></li>
+              <li><a (click) ="logout()">Odjavi se</a></li>
+            </ul>
+          </nav>
+          
+          <div class="menu-bar"><span class="lnr lnr-menu"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<router-outlet></router-outlet>
+<!-- End Header Area -->
