@@ -1,0 +1,32 @@
+<br><br><br><br><br><br>
+<form class="form-horizontal" name="form" (ngSubmit)="save()">
+  <fieldset>
+  
+  <!-- Form Name -->
+  <legend class="leg">Dodavanje pacijenta</legend>
+  <br>
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label">Ime</label>  
+    <div class="col-md-4">
+    <input type="text" class="form-control input-md" name="firstName" [(ngModel)]="patient.firstName" placeholder="Ime pacijenta" autofocus>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="col-md-4 control-label">Prezime</label>
+    <div class="col-md-4">
+      <input type="text" class="form-control input-md" name="lastName" [(ngModel)]="patient.lastName" placeholder="Prezime pacijenta">
+    </div>
+  </div>  
+  
+  <!-- Button -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="btn_continuar"></label>
+    <div class="col-md-4">
+      <button type="submit" name="btn_continuar" class="btn btn-primary right">Dodaj</button>
+    </div>
+  </div>
+  
+  </fieldset>
+  </form>
