@@ -25,7 +25,10 @@ export class AddPatientComponent implements OnInit {
 
   save(){
     this.patientService.addPatient(this.patient)
-      .then(res => this.router.navigate(['home']));
+      .then(res =>{
+        console.log(res); 
+        this.router.navigate(['home']);
+      });
   }
 
 }

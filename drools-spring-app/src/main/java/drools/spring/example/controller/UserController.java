@@ -54,10 +54,10 @@ public class UserController {
 
 	@PostMapping("/user")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<Void> addUser(@RequestBody UserResponseDTO user) {
+	public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserResponseDTO user) {
 		try {
-			userService.signup(modelMapper.map(user, User.class));
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			user = modelMapper.map(userService.signup(modelMapper.map(user, User.class)), UserResponseDTO.class);
+			return new ResponseEntity<>(user, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

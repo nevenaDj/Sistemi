@@ -8,11 +8,12 @@ import drools.spring.example.repository.PatientRepository;
 
 @Service
 public class PatientService {
+
 	@Autowired
 	private PatientRepository patientRepository;
 
-	public void addPatient(Patient patient) {
-		patientRepository.save(patient);
+	public Patient addPatient(Patient patient) {
+		return patientRepository.save(patient);
 	}
 
 }

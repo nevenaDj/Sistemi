@@ -44,13 +44,11 @@ public class UserService {
 		}
 	}
 
-	public void signup(User user) {
-		System.out.println(user);
+	public User signup(User user) {
 		if (!userRepository.existsByUsername(user.getUsername())) {
 			user.setPassword(passwordEncoder.encode("password"));
 			user.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_DOCTOR)));
-			System.out.println(user);
-			userRepository.save(user);
+			return userRepository.save(user);
 		} else {
 			throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
 		}

@@ -7,5 +7,8 @@ insert into user (username, password, first_name, last_name, expertise) values (
 insert into user_roles (user_id, roles) values (1, 0); -- admin has ROLE_ADMIN
 insert into user_roles (user_id, roles) values (2, 1); -- doctor has ROLE_DOCTOR
 
+insert into cure_group (name) value ('analgetik');
+insert into cure_group (name) value ('antibiotik');
+insert into cure_group (name) value ('ostalo');
 
 

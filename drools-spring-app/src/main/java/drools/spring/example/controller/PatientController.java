@@ -26,9 +26,9 @@ public class PatientController {
 
 	@PostMapping("/patient")
 	@PreAuthorize("hasRole('ROLE_DOCTOR')")
-	public ResponseEntity<Void> addUser(@RequestBody PatientDTO patient) {
-		patientService.addPatient(modelMapper.map(patient, Patient.class));
-		return new ResponseEntity<>(HttpStatus.CREATED);
+	public ResponseEntity<PatientDTO> addUser(@RequestBody PatientDTO patient) {
+		patient = modelMapper.map(patientService.addPatient(modelMapper.map(patient, Patient.class)), PatientDTO.class);
+		return new ResponseEntity<>(patient, HttpStatus.CREATED);
 
 	}
 

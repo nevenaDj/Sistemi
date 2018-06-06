@@ -31,7 +31,6 @@ export class LoginComponent implements OnInit {
     this.auth.login(this.user.username, this.user.password)
         .then(res => this.auth.me().then(me => 
           {
-            console.log(me);
             if (me.roles.includes('ROLE_ADMIN')){
               this.router.navigate(['/admin']);
 
@@ -42,7 +41,7 @@ export class LoginComponent implements OnInit {
           })
          )
           //this.router.navigate(['/home']))
-        .catch(res => this.toastr.error('Invalid username/password.'));
+        .catch(res => this.toastr.error('Neispravno korisničko ime ili lozinka.'));
   }
 
 }

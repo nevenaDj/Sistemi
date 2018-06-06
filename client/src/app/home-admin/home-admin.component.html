@@ -10,21 +10,23 @@
           <nav>
             <ul class="nav navbar-nav f">
             <li class="dropdown" dropdown [dropdownToggle]="true" >
-              <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Dodaj <span class="caret"></span></a>
+              <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Upis <span class="caret"></span></a>
               <ul class="dropdown-menu" >
                   <li cclass="dropdown-item"><a [routerLink]="['/admin/user']">Doktora</a></li>
-                  <li class="dropdown-item"><a [routerLink]="['/admin']">Bolest</a></li>
+                  <li class="dropdown-item"><a [routerLink]="['/admin/disease']">Bolesti</a></li>
+                  <li class="dropdown-item"><a [routerLink]="['/admin/cure']">Lekova</a></li>
               </ul>
             </li>
             <li class="dropdown" dropdown [dropdownToggle]="true" >
-                <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Pretrazi <span class="caret"></span></a>
+                <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Prikaz <span class="caret"></span></a>
                 <ul class="dropdown-menu dropdown-button" >
-                    <li class="dropdown-button"><a [routerLink]="['/admin']">Doktore</a></li>
+                    <li class="dropdown-button"><a [routerLink]="['/admin']">Doktora</a></li>
                     <li class="dropdown-button"><a [routerLink]="['/admin']">Bolesti</a></li>
+                    <li class="dropdown-button"><a [routerLink]="['/admin/cures']">Lekova</a></li>
                 </ul>
               </li>
-              <li><a [routerLink]="['/admin/password']">Promeni lozinku</a></li>
-              <li><a (click) ="logout()">Odjavi se</a></li>
+              <li><a [routerLink]="['/admin/password']">Promena lozinke</a></li>
+              <li><a (click) ="logout()">Odjava</a></li>
             </ul>
           </nav>
           
@@ -33,6 +35,6 @@
       </div>
     </div>
   </div>
-</header>
+</header>  
 <router-outlet></router-outlet>
 <!-- End Header Area -->

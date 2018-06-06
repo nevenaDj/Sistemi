@@ -64,6 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/polyfills**")//
 				.antMatchers("/styles**")//
 				.antMatchers("/favicon.ico")//
+				.antMatchers("/scripts**")//
+				.antMatchers("/glyphicons**")//
 				.antMatchers("/fontawesome**")//
 				.antMatchers("/vendor**")//
 				.antMatchers("/assets/1**")//

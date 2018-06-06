@@ -6,6 +6,9 @@ import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { AddPatientComponent } from './add-patient/add-patient.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { AddDiseaseComponent } from './add-disease/add-disease.component';
+import { AddCureComponent } from './add-cure/add-cure.component';
+import { CuresComponent } from './cures/cures.component';
 
 const routes: Routes = [
   { 
@@ -29,12 +32,22 @@ const routes: Routes = [
       {
         path: 'user',
         component: AddUserComponent
-    
+      },
+      {
+        path:'disease',
+        component: AddDiseaseComponent
+      },
+      {
+        path: 'cure',
+        component: AddCureComponent
       },
       {
         path: 'password',
         component: ChangePasswordComponent
-
+      },
+      {
+        path: 'cures',
+        component: CuresComponent
       }
     ]
   },

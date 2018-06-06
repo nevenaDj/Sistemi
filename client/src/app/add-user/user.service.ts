@@ -6,20 +6,21 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  addUser(user: UserInterface): Promise<{}>{
+  addUser(user: UserInterface): Promise<UserInterface>{
     const url = '/api/user';
     return this.http
           .post(url, user)
           .toPromise()
+          .then(res => res)
           .catch(this.handleError);
   }
 
   changePassword (user: UserPassInterface): Promise<any>{
     return this.http
-    .post('/api/password', user)
-    .toPromise()
-    .then(res => res)
-    .catch(this.handleError);
+          .post('/api/password', user)
+          .toPromise()
+          .then(res => res)
+          .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {

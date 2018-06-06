@@ -1,0 +1,66 @@
+<br><br><br><br><br><br>
+<form class="form-horizontal" name="form" (ngSubmit)="save()">
+  <fieldset>
+  
+  <!-- Form Name -->
+  <legend class="leg">Upis bolesti</legend>
+  <br>
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label">Naziv</label>  
+    <div class="col-md-4">
+    <input type="text" class="form-control input-md" name="name" [(ngModel)]="disease.name" placeholder="Naziv bolesti" autofocus>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="col-md-4 control-label">Simptomi  </label>
+    <div class="col-md-4">
+        <select class="form-control selectpicker" multiple data-live-search="true" [(ngModel)]="disease.symptoms" (ngModelChange)="objChanged($event)" [ngModelOptions]="{standalone: true}" multiple title="Simptomi bolesti" >
+            <option *ngFor="let c of symptoms" [ngValue]="c">{{c.name}}</option>
+        </select>
+      </div>
+  </div>  
+
+  <div class="form-group" >
+      <p class="control-label simp">Simptom se ne nalazi na spisku? 
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Dodaj</button>
+       novi </p>  
+  </div>
+  
+  <!-- Button -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="btn_continuar"></label>
+    <div class="col-md-4">
+      <button type="submit" name="btn_continuar" class="btn btn-primary right">Upiši</button>
+    </div>
+  </div>
+  
+  </fieldset>
+  </form>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <b style="color: black;">Upis simptoma</b>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Naziv:</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="symptom.name" placeholder="Naziv simptoma" autofocus>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Zatvori</button>
+        <button type="button" class="btn btn-primary" (click)="saveSymptom()" data-dismiss="modal">Upiši</button>
+      </div>
+    </div>
+  </div>
+</div>

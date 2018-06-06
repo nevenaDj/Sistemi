@@ -7,6 +7,11 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastModule, ToastOptions} from 'ng2-toastr/ng2-toastr';
 import { DropdownModule } from 'ngx-dropdown';
 
+import { ComponentService } from './add-cure/component.service';
+import { GroupeService } from './add-cure/groupe.service';
+import { SymptomService } from './add-disease/symptom.service';
+import { CureService } from './add-cure/cure.service';
+import { DiseaseService } from './add-disease/disease.service';
 import { PatientService } from './add-patient/patient.service';
 import { UserService } from './add-user/user.service';
 import { AuthService } from './login/auth.service';
@@ -19,6 +24,9 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { AddPatientComponent } from './add-patient/add-patient.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { EqualValidator } from './change-password/equal-validator.directive';
+import { AddDiseaseComponent } from './add-disease/add-disease.component';
+import { AddCureComponent } from './add-cure/add-cure.component';
+import { CuresComponent } from './cures/cures.component';
 
 
 export class CustomOption extends ToastOptions {
@@ -37,7 +45,10 @@ export class CustomOption extends ToastOptions {
     AddUserComponent,
     AddPatientComponent,
     ChangePasswordComponent,
-    EqualValidator
+    EqualValidator,
+    AddDiseaseComponent,
+    AddCureComponent,
+    CuresComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +63,11 @@ export class CustomOption extends ToastOptions {
     AuthService,
     UserService,
     PatientService,
+    DiseaseService,
+    SymptomService,
+    ComponentService,
+    CureService,
+    GroupeService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,

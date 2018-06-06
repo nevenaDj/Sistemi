@@ -6,11 +6,12 @@ export class PatientService {
 
   constructor(private http: HttpClient) { }
 
-  addPatient(patient: PatientInterface): Promise<{}>{
+  addPatient(patient: PatientInterface): Promise<PatientInterface>{
     const url = '/api/patient';
     return this.http
           .post(url, patient)
           .toPromise()
+          .then(res => res)
           .catch(this.handleError);
   }
 

@@ -39,7 +39,7 @@ export class ChangePasswordComponent implements OnInit {
     if (isValid){
       this.userService.changePassword(this.user)
         .then(res => this.location.back())
-        .catch(res => this.toastr.error('An error occurred while changing the password.'));
+        .catch(res => this.toastr.error('Greška prilikom promene lozinke. Molimo pokušajte ponovo.'));
     }
   }
 
