@@ -20,5 +20,4 @@ export class HomeAdminComponent implements OnInit {
   logout(){
     this.auth.logout();
   }
-
 }
