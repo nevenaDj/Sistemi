@@ -16,4 +16,8 @@ public class PatientService {
 		return patientRepository.save(patient);
 	}
 
+	public Patient findOne(Integer id) {
+		return patientRepository.getOne(id);
+	}
+
 }

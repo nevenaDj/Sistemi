@@ -3,12 +3,10 @@ package drools.spring.example.dto;
 import java.util.HashSet;
 import java.util.Set;
 
-import drools.spring.example.model.Group;
-
 public class CureDTO {
 	private Integer id;
 	private String name;
-	private Group group;
+	private GroupeDTO group;
 	private Set<ComponentDTO> components = new HashSet<>();
 
 	public Integer getId() {
@@ -27,11 +25,11 @@ public class CureDTO {
 		this.name = name;
 	}
 
-	public Group getGroup() {
+	public GroupeDTO getGroup() {
 		return group;
 	}
 
-	public void setGroup(Group group) {
+	public void setGroup(GroupeDTO group) {
 		this.group = group;
 	}
 

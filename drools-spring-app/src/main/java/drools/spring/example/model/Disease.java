@@ -20,8 +20,18 @@ public class Disease {
 	@Column
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Symptom> symptoms = new HashSet<>();
+	@OneToMany(mappedBy = "disease", fetch = FetchType.EAGER)
+	private Set<DiseaseSymptom> diseaseSymptoms = new HashSet<>();
+
+	public Disease() {
+
+	}
+
+	public Disease(Integer id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 
 	public Integer getId() {
 		return id;
@@ -31,20 +41,20 @@ public class Disease {
 		this.id = id;
 	}
 
-	public Set<Symptom> getSymptoms() {
-		return symptoms;
-	}
-
-	public void setSymptoms(Set<Symptom> symptoms) {
-		this.symptoms = symptoms;
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Set<DiseaseSymptom> getDiseaseSymptoms() {
+		return diseaseSymptoms;
+	}
+
+	public void setDiseaseSymptoms(Set<DiseaseSymptom> diseaseSymptoms) {
+		this.diseaseSymptoms = diseaseSymptoms;
 	}
 
 }
