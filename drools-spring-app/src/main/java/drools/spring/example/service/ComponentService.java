@@ -5,11 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
-import drools.spring.example.exception.CustomException;
 import drools.spring.example.model.Component;
 import drools.spring.example.repository.ComponentRepository;
 
@@ -35,11 +32,12 @@ public class ComponentService {
 		return componentRepository.getOne(id);
 	}
 
-	public void remove(Integer id) {
-		try {
+	public boolean remove(Integer id) {
+		if (componentRepository.findByComponentId(id).isEmpty()) {
 			componentRepository.deleteById(id);
-		} catch (AuthenticationException e) {
-			throw new CustomException("The component can't be removed.", HttpStatus.UNPROCESSABLE_ENTITY);
+			return true;
+		} else {
+			return false;
 		}
 	}
 

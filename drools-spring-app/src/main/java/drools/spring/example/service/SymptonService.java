@@ -37,7 +37,13 @@ public class SymptonService {
 		return symptomRepository.findAll(page);
 	}
 
-	public void remove(Integer id) {
+	public boolean remove(Integer id) {
+		if (diseaseSymptomRepository.findBySymptomId(id).isEmpty()) {
+			symptomRepository.deleteById(id);
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 

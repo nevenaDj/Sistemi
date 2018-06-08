@@ -2,10 +2,13 @@ package drools.spring.example.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -75,6 +78,15 @@ public class UserService {
 
 	public User whoami(HttpServletRequest req) {
 		return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+	}
+
+	public Page<User> findAll(Integer role, Pageable page) {
+		return userRepository.find(role, page);
+	}
+
+	public Integer getCount(Integer role) {
+		List<User> users = userRepository.findAll(role);
+		return users.size();
 	}
 
 }

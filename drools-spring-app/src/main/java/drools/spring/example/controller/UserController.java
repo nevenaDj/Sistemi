@@ -1,9 +1,14 @@
 package drools.spring.example.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -75,6 +80,25 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		}
+	}
+
+	@GetMapping("/doctors")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<List<UserResponseDTO>> getAllDoctorsPage(Pageable page) {
+		Page<User> doctors = userService.findAll(1, page);
+		List<UserResponseDTO> doctorDTOs = new ArrayList<>();
+		for (User doctor : doctors) {
+			doctorDTOs.add(modelMapper.map(doctor, UserResponseDTO.class));
+		}
+
+		return new ResponseEntity<>(doctorDTOs, HttpStatus.OK);
+	}
+
+	@GetMapping("/doctors/count")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<Integer> getCount() {
+		Integer count = userService.getCount(1);
+		return new ResponseEntity<>(count, HttpStatus.OK);
 	}
 
 }

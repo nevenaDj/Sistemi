@@ -1,5 +1,7 @@
 package drools.spring.example.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,10 @@ public class PatientService {
 
 	public Patient findOne(Integer id) {
 		return patientRepository.getOne(id);
+	}
+
+	public List<Patient> findPatients(String search) {
+		return patientRepository.findPatients(search);
 	}
 
 }

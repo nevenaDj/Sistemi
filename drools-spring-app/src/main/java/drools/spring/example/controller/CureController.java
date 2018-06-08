@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -97,6 +98,13 @@ public class CureController {
 	public ResponseEntity<Long> getCount() {
 		Long count = cureService.getCount();
 		return new ResponseEntity<>(count, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/cure/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<Void> deleteCure(@PathVariable Integer id) {
+		cureService.remove(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

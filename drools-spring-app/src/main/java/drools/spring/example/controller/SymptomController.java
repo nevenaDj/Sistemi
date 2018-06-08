@@ -82,14 +82,11 @@ public class SymptomController {
 	@DeleteMapping("/symptom/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Void> deleteSymptom(@PathVariable Integer id) {
-		try {
-			symptonService.remove(id);
+		if (symptonService.remove(id)) {
 			return new ResponseEntity<>(HttpStatus.OK);
-
-		} catch (Exception e) {
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
 	}
 
 	@GetMapping("/symptoms")

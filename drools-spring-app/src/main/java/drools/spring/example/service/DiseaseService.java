@@ -3,11 +3,8 @@ package drools.spring.example.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
-import drools.spring.example.exception.CustomException;
 import drools.spring.example.model.Disease;
 import drools.spring.example.repository.DiseaseRepository;
 
@@ -30,11 +27,7 @@ public class DiseaseService {
 	}
 
 	public void remove(Integer id) {
-		try {
-			diseaseRepository.deleteById(id);
-		} catch (AuthenticationException e) {
-			throw new CustomException("The disease can't be removed.", HttpStatus.UNPROCESSABLE_ENTITY);
-		}
+		diseaseRepository.deleteById(id);
 	}
 
 	public Long getCount() {

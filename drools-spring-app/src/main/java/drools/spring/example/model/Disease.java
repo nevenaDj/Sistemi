@@ -3,6 +3,7 @@ package drools.spring.example.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +21,7 @@ public class Disease {
 	@Column
 	private String name;
 
-	@OneToMany(mappedBy = "disease", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "disease", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
 	private Set<DiseaseSymptom> diseaseSymptoms = new HashSet<>();
 
 	public Disease() {
