@@ -25,16 +25,17 @@ public class DiseaseSymptom {
 	private Symptom symptom;
 
 	@Column
-	private boolean specificDisease;
+	private boolean specificSymptom;
 
 	public DiseaseSymptom() {
 
 	}
 
-	public DiseaseSymptom(Disease disease, Symptom symptom) {
+	public DiseaseSymptom(Disease disease, Symptom symptom, boolean specificSymptom) {
 		super();
 		this.disease = disease;
 		this.symptom = symptom;
+		this.specificSymptom = specificSymptom;
 	}
 
 	public Long getId() {
@@ -61,12 +62,12 @@ public class DiseaseSymptom {
 		this.symptom = symptom;
 	}
 
-	public boolean isSpecificDisease() {
-		return specificDisease;
+	public boolean isSpecificSymptom() {
+		return specificSymptom;
 	}
 
-	public void setSpecificDisease(boolean specificDisease) {
-		this.specificDisease = specificDisease;
+	public void setSpecificSymptom(boolean specificSymptom) {
+		this.specificSymptom = specificSymptom;
 	}
 
 }

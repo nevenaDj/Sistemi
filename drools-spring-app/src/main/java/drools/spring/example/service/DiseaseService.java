@@ -1,5 +1,7 @@
 package drools.spring.example.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,10 @@ public class DiseaseService {
 
 	public Disease findOne(Integer id) {
 		return diseaseRepository.getOne(id);
+	}
+
+	public List<Disease> findAllDiseases() {
+		return diseaseRepository.findAll();
 	}
 
 	public Page<Disease> findAll(Pageable page) {

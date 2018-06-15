@@ -55,9 +55,16 @@ public class SymptonService {
 		return symptomRepository.getSymptoms(id);
 	}
 
+	public List<DiseaseSymptom> getDiseaseSymptoms(Integer id) {
+		return symptomRepository.getDiseaseSymptoms(id);
+	}
+
 	public DiseaseSymptom addDiseaseSymptom(DiseaseSymptom diseaseSymptom) {
 		return diseaseSymptomRepository.save(diseaseSymptom);
+	}
 
+	public List<DiseaseSymptom> findBySymptomId(Integer id) {
+		return diseaseSymptomRepository.findBySymptomId(id);
 	}
 
 }

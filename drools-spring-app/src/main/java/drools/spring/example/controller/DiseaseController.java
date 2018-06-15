@@ -1,8 +1,13 @@
 package drools.spring.example.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.modelmapper.ModelMapper;
@@ -51,7 +56,7 @@ public class DiseaseController {
 		for (SymptomDTO symptomDTO : diseaseDTO.getSymptoms()) {
 			Symptom symptom = modelMapper.map(symptomDTO, Symptom.class);
 
-			DiseaseSymptom diseaseSymptom = new DiseaseSymptom(disease, symptom);
+			DiseaseSymptom diseaseSymptom = new DiseaseSymptom(disease, symptom, symptomDTO.isSpecificSymptom());
 			symptomService.addDiseaseSymptom(diseaseSymptom);
 
 		}
@@ -92,6 +97,30 @@ public class DiseaseController {
 		return new ResponseEntity<>(diseaseDTO, HttpStatus.OK);
 	}
 
+	@GetMapping("/disease")
+	@PreAuthorize("hasRole('ROLE_DOCTOR')")
+	public ResponseEntity<List<DiseaseDTO>> getAllDiseases() {
+		List<Disease> diseases = diseaseService.findAllDiseases();
+		List<DiseaseDTO> diseaseDTOs = new ArrayList<>();
+		for (Disease disease : diseases) {
+			DiseaseDTO diseaseDTO = modelMapper.map(disease, DiseaseDTO.class);
+			List<DiseaseSymptom> diseaseSymptoms = symptomService.getDiseaseSymptoms(disease.getId());
+			Set<SymptomDTO> symptomDTOs = new HashSet<>();
+
+			for (DiseaseSymptom diseaseSymptom : diseaseSymptoms) {
+				SymptomDTO symptomDTO = modelMapper.map(diseaseSymptom.getSymptom(), SymptomDTO.class);
+				symptomDTO.setSpecificSymptom(diseaseSymptom.isSpecificSymptom());
+
+				symptomDTOs.add(symptomDTO);
+			}
+
+			diseaseDTO.setSymptoms(symptomDTOs);
+			diseaseDTOs.add(diseaseDTO);
+		}
+
+		return new ResponseEntity<>(diseaseDTOs, HttpStatus.OK);
+	}
+
 	@GetMapping("/diseases")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<List<DiseaseDTO>> getAllDiseasePage(Pageable page) {
@@ -126,6 +155,72 @@ public class DiseaseController {
 	public ResponseEntity<Void> deleteDisease(@PathVariable Integer id) {
 		diseaseService.remove(id);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PostMapping("/disease/search")
+	@PreAuthorize("hasRole('ROLE_DOCTOR')")
+	public ResponseEntity<List<DiseaseDTO>> searchDisease(@RequestBody List<SymptomDTO> symptomDTOs) {
+		Map<Integer, Integer> diseasesSort = new HashMap<>();
+		Map<Integer, Disease> diseases = new HashMap<>();
+		for (SymptomDTO symptomDTO : symptomDTOs) {
+			System.out.println(symptomDTO.getName());
+			List<DiseaseSymptom> diseaseSymptoms = symptomService.findBySymptomId(symptomDTO.getId());
+
+			for (DiseaseSymptom diseaseSymptom : diseaseSymptoms) {
+				if (diseasesSort.containsKey(diseaseSymptom.getDisease().getId())) {
+					Integer count = diseasesSort.get(diseaseSymptom.getDisease().getId());
+					diseasesSort.put(diseaseSymptom.getDisease().getId(), count + 1);
+
+				} else {
+					diseasesSort.put(diseaseSymptom.getDisease().getId(), 1);
+					diseases.put(diseaseSymptom.getDisease().getId(), diseaseSymptom.getDisease());
+				}
+			}
+
+		}
+
+		for (Integer i : diseasesSort.values()) {
+			System.out.println(i);
+		}
+
+		for (Integer j : diseasesSort.keySet()) {
+			System.out.println(diseases.get(j).getName());
+		}
+
+		List<DiseaseDTO> diseaseDTOs = new ArrayList<>();
+		for (Entry<Integer, Integer> e : entriesSortedByValues(diseasesSort)) {
+			System.out.println(e.getKey());
+			DiseaseDTO diseaseDTO = modelMapper.map(diseases.get(e.getKey()), DiseaseDTO.class);
+			List<DiseaseSymptom> diseaseSymptoms = symptomService.getDiseaseSymptoms(e.getKey());
+			Set<SymptomDTO> sDto = new HashSet<>();
+			for (DiseaseSymptom diseaseSymptom : diseaseSymptoms) {
+				System.out.println(diseaseSymptom.getSymptom().getName());
+				SymptomDTO symptomDTO = modelMapper.map(diseaseSymptom.getSymptom(), SymptomDTO.class);
+				symptomDTO.setSpecificSymptom(diseaseSymptom.isSpecificSymptom());
+
+				sDto.add(symptomDTO);
+			}
+
+			diseaseDTO.setSymptoms(sDto);
+			diseaseDTOs.add(diseaseDTO);
+		}
+
+		return new ResponseEntity<>(diseaseDTOs, HttpStatus.OK);
+
+	}
+
+	static <K, V extends Comparable<? super V>> List<Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
+
+		List<Entry<K, V>> sortedEntries = new ArrayList<Entry<K, V>>(map.entrySet());
+
+		Collections.sort(sortedEntries, new Comparator<Entry<K, V>>() {
+			@Override
+			public int compare(Entry<K, V> e1, Entry<K, V> e2) {
+				return e2.getValue().compareTo(e1.getValue());
+			}
+		});
+
+		return sortedEntries;
 	}
 
 }

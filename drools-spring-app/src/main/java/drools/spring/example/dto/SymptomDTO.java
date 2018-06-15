@@ -4,6 +4,7 @@ public class SymptomDTO {
 
 	private Integer id;
 	private String name;
+	private boolean specificSymptom;
 
 	public Integer getId() {
 		return id;
@@ -19,6 +20,14 @@ public class SymptomDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isSpecificSymptom() {
+		return specificSymptom;
+	}
+
+	public void setSpecificSymptom(boolean specificSymptom) {
+		this.specificSymptom = specificSymptom;
 	}
 
 }

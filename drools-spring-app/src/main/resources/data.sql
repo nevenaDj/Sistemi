@@ -19,24 +19,24 @@ insert into symptom (name) values ('kašalj');
 
 insert into disease (name) values ('prehlada');
 
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (1, 1, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (1, 2, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (1, 3, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (1, 4, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (1, 5, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (1, 1, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (1, 2, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (1, 3, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (1, 4, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (1, 5, false);
 
 insert into symptom (name) values ('temperatura veća od 38 ⁰C');
 insert into symptom (name) values ('drhtavica');
 
 insert into disease (name) values ('groznica');
 
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (2, 4, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (2, 2, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (2, 5, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (2, 6, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (2, 1, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (2, 3, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (2, 7, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (2, 4, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (2, 2, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (2, 5, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (2, 6, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (2, 1, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (2, 3, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (2, 7, false);
 
 
 insert into symptom (name) values ('bol koji se širi do ušiju');
@@ -47,11 +47,14 @@ insert into symptom (name) values ('žuti sekret iz nosa');
 
 insert into disease (name) values ('upala krajnika');
 
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (3, 2, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (3, 8, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (3, 3, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (3, 9, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (3, 7, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (3, 10, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (3, 11, false);
-insert into disease_symptom (disease_id, symptom_id, specific_disease) values (3, 12, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (3, 2, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (3, 8, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (3, 3, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (3, 9, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (3, 7, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (3, 10, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (3, 11, false);
+insert into disease_symptom (disease_id, symptom_id, specific_symptom) values (3, 12, false);
+
+insert into component (name) values ('component1');
+insert into component (name) values ('component2');

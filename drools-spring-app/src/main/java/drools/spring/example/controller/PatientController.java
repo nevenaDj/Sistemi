@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import drools.spring.example.dto.PatientDTO;
+import drools.spring.example.model.Disease;
 import drools.spring.example.model.Patient;
+import drools.spring.example.model.PatientDisease;
 import drools.spring.example.service.PatientService;
 
 @RestController
@@ -62,6 +64,20 @@ public class PatientController {
 		}
 
 		return new ResponseEntity<>(patientDTOs, HttpStatus.OK);
+	}
+
+	@PostMapping("/patient/{id}/disease")
+	@PreAuthorize("hasRole('ROLE_DOCTOR')")
+	public ResponseEntity<Void> addPatientDisease(@PathVariable Integer id, @RequestBody Disease disease) {
+		Patient patient = patientService.findOne(id);
+
+		if (patient == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		PatientDisease patientDisease = new PatientDisease(patient, disease);
+		patientDisease = patientService.addPatientDisease(patientDisease);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

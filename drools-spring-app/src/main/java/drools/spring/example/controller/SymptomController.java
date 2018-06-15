@@ -56,7 +56,7 @@ public class SymptomController {
 	}
 
 	@GetMapping("/symptom")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
 	public ResponseEntity<List<SymptomDTO>> getAllSymptoms() {
 		List<Symptom> symptoms = symptonService.findAllSymptoms();
 		List<SymptomDTO> symptomDTOs = new ArrayList<>();
