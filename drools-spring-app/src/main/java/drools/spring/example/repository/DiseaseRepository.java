@@ -7,5 +7,6 @@ import drools.spring.example.model.Disease;
 
 @Repository
 public interface DiseaseRepository extends JpaRepository<Disease, Integer> {
+	Disease findByName(String name);
 
 }

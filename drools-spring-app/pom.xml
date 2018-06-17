@@ -11,28 +11,36 @@
 	<name>drools-spring-app</name>
 	<description>Projekat</description>
 	
-
-	<repositories>
-	  	<repository>
-	  		<id>Java.Net</id>
-	  		<url>http://download.java.net/maven/2/</url>
-	  	</repository>
-	  </repositories>
-
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.0.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<kie.version>6.5.0.Final</kie.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+	
+
+	<dependencyManagement>
+     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>2.0.0.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+			<groupId>io.spring.platform</groupId>
+			<artifactId>platform-bom</artifactId>
+			<version>1.1.1.RELEASE</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+    </dependencies>
+</dependencyManagement>
+
+	
 
 	<dependencies>
 		<dependency>
@@ -73,13 +81,54 @@
 		<dependency>
 			<groupId>org.kie</groupId>
     		<artifactId>kie-api</artifactId>
-    		<version>7.7.0.Final</version>
+    		<version>6.5.0.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.kie</groupId>
     		<artifactId>kie-spring</artifactId>
-    		<version>7.7.0.Final</version>
+    		<version>6.5.0.Final</version>
 		</dependency>
+		<dependency>
+			<groupId>org.kie</groupId>
+  			<artifactId>kie-ci</artifactId>
+  			<version>6.5.0.Final</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.drools</groupId>
+    		<artifactId>drools-core</artifactId>
+    		<version>6.5.0.Final</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        
+         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+        	<groupId>pl.maciejwalkowiak</groupId>
+        	<artifactId>junit-drools</artifactId>
+        	<version>1.0</version>
+        	<scope>test</scope>
+    	</dependency>
 		
 		<dependency>
 	  		<groupId>drools-spring</groupId>
@@ -95,10 +144,23 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+        <id>maciejwalkowiak.pl</id>
+        <url>https://github.com/maciejwalkowiak/maven-repo/raw/releases/</url>
+    </repository>
+	</repositories>
+	
 
 
 </project>

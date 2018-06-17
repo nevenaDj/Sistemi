@@ -30,8 +30,10 @@ import drools.spring.example.dto.DiseaseDTO;
 import drools.spring.example.dto.SymptomDTO;
 import drools.spring.example.model.Disease;
 import drools.spring.example.model.DiseaseSymptom;
+import drools.spring.example.model.Patient;
 import drools.spring.example.model.Symptom;
 import drools.spring.example.service.DiseaseService;
+import drools.spring.example.service.PatientService;
 import drools.spring.example.service.SymptonService;
 
 @RestController
@@ -42,6 +44,9 @@ public class DiseaseController {
 
 	@Autowired
 	private SymptonService symptomService;
+
+	@Autowired
+	private PatientService patientService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -206,6 +211,41 @@ public class DiseaseController {
 		}
 
 		return new ResponseEntity<>(diseaseDTOs, HttpStatus.OK);
+
+	}
+
+	@PostMapping("disease/patient/{id}/find")
+	@PreAuthorize("hasRole('ROLE_DOCTOR')")
+	public ResponseEntity<DiseaseDTO> findDisease(@PathVariable Integer id, @RequestBody List<SymptomDTO> symptomDTOs) {
+		Patient patient = patientService.findOne(id);
+
+		if (patient == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		List<Symptom> symptoms = new ArrayList<>();
+		for (SymptomDTO symptomDTO : symptomDTOs) {
+			symptoms.add(modelMapper.map(symptomDTO, Symptom.class));
+		}
+
+		Disease disease = diseaseService.findDisease(symptoms, patient);
+
+		if (disease == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		DiseaseDTO diseaseDTO = modelMapper.map(disease, DiseaseDTO.class);
+		symptoms = symptomService.getSymptoms(diseaseDTO.getId());
+		Set<SymptomDTO> symptomDTOs2 = new HashSet<>();
+
+		for (Symptom symptom : symptoms) {
+			SymptomDTO s = modelMapper.map(symptom, SymptomDTO.class);
+			symptomDTOs2.add(s);
+		}
+
+		diseaseDTO.setSymptoms(symptomDTOs2);
+
+		return new ResponseEntity<>(diseaseDTO, HttpStatus.OK);
 
 	}
 

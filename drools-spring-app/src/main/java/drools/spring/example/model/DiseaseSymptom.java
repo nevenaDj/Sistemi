@@ -27,6 +27,9 @@ public class DiseaseSymptom {
 	@Column
 	private boolean specificSymptom;
 
+	@Column
+	private boolean showSymptom;
+
 	public DiseaseSymptom() {
 
 	}
@@ -68,6 +71,14 @@ public class DiseaseSymptom {
 
 	public void setSpecificSymptom(boolean specificSymptom) {
 		this.specificSymptom = specificSymptom;
+	}
+
+	public boolean isShowSymptom() {
+		return showSymptom;
+	}
+
+	public void setShowSymptom(boolean showSymptom) {
+		this.showSymptom = showSymptom;
 	}
 
 }
