@@ -1,0 +1,34 @@
+//created on: 17.06.2018.
+package drools.spring.rules
+
+import drools.spring.example.model.Cure;
+import drools.spring.example.model.CureComponent;
+import drools.spring.example.model.AlergicCure;
+import drools.spring.example.model.AlergicComponent;
+
+
+
+rule "Alergija na lek"
+	no-loop
+	lock-on-active true
+    when
+        $c : Cure( $id : id )
+        AlergicCure( cure.id == $id)
+        
+    then
+        modify($c){ setAlergic(true); }
+
+end
+
+
+rule "Alergija na komponentu iz leka"
+	no-loop
+	lock-on-active true
+    when
+        $c : CureComponent( $id : component.id )
+        AlergicComponent( component.id == $id)
+        
+    then
+        modify($c){ setAlergic(true); }
+
+end

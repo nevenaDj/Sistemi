@@ -6,6 +6,7 @@ public class PatientDTO {
 
 	private String firstName;
 	private String lastName;
+	private UserResponseDTO doctor;
 
 	public Integer getId() {
 		return id;
@@ -29,6 +30,14 @@ public class PatientDTO {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public UserResponseDTO getDoctor() {
+		return doctor;
+	}
+
+	public void setDoctor(UserResponseDTO doctor) {
+		this.doctor = doctor;
 	}
 
 }

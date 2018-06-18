@@ -1,0 +1,57 @@
+//created on: 18.06.2018.
+package drools.spring.rules
+
+import drools.spring.example.model.Disease;
+import drools.spring.example.model.PatientDisease;
+import drools.spring.example.model.Patient;
+import drools.spring.example.model.PatientCure;
+import drools.spring.example.model.User;
+import java.util.Set;
+import java.util.List;
+
+query "Spisak pacijenata sa mogucim hronicnim oboljenjima"  
+    patient : Patient( $idPatient : id )
+    disease : Disease( $idDisease : id , name not in ("prehlada", "groznica"))
+    Number(intValue >= 5) from accumulate(
+             $pd : PatientDisease( disease.id == $idDisease, patient.id == $idPatient,  dateBeforeMonth(24) ),
+            count($pd)
+        )
+    
+end
+
+
+query "Spisak mogucih zavisnika"  
+    $patient : Patient( $idPatient : id )  
+         
+    $patientCure : List(size() >= 6) 
+    from accumulate( 
+        $pd : PatientCure( cure.group.name == "analgetik", patientDisease.patient.id == $idPatient,  dateBeforeMonth(6)),
+        collectList($pd)) 
+        
+    $doctors: Set(size() >= 3) 
+    from accumulate (
+    	PatientCure( cure.group.name == "analgetik", patientDisease.patient.id == $idPatient,  dateBeforeMonth(6), $d : doctor ),
+    	collectSet($d)
+    	)
+    
+end
+
+
+query "Spisak pacijenta sa oslabljenim imunitetom"  
+    $patient : Patient( $idPatient : id )
+    not PatientCure( patientDisease.patient.id == $idPatient,  cure.group.name != "antibiotik",  dateBeforeMonth(12) )
+    
+    $patientCure : List(size() >= 10) 
+    from accumulate( 
+        $pd : PatientCure( cure.group.name == "antibiotik", patientDisease.patient.id == $idPatient,  dateBeforeMonth(12)),
+        collectList($pd)
+        ) 
+        
+    $patientDisease :  Set(size() >= 2) 
+    from accumulate (
+    	 PatientCure( $pd : patientDisease.disease, cure.group.name == "antibiotik",  patientDisease.patient.id == $idPatient, dateBeforeMonth(12) ),
+    	 collectSet($pd)
+    	)
+     	  
+end
+

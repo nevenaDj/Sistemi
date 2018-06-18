@@ -60,35 +60,10 @@ public class DiseaseService {
 	}
 
 	public Disease findDisease(List<Symptom> symptoms, Patient patient) {
-
 		KieSession kieSession = kieContainer.newKieSession();
-		for (Symptom symptom : symptoms) {
-			kieSession.insert(symptom);
-		}
-
-		List<PatientDisease> patientDiseases = patientDiseaseRepository.getPatientDiseases(patient.getId());
-		for (PatientDisease patientDisease : patientDiseases) {
-			kieSession.insert(patientDisease);
-			List<PatientCure> patientCures = patientCureRepository.getPatientCures(patientDisease.getId());
-
-			for (PatientCure patientCure : patientCures) {
-				kieSession.insert(patientCure);
-			}
-		}
 
 		List<Disease> diseases = diseaseRepository.findAll();
-
-		for (Disease disease : diseases) {
-			disease.setNumSymptoms(0L);
-			disease.setSpecificSymptoms(0L);
-			for (DiseaseSymptom diseaseSymptom : disease.getDiseaseSymptoms()) {
-				disease.setSymptoms(diseaseSymptom.getSymptom().getName());
-
-			}
-			if (!disease.getDiseaseSymptoms().isEmpty()) {
-				kieSession.insert(disease);
-			}
-		}
+		addFactInMemory(kieSession, symptoms, patient, diseases);
 
 		int firedRules = kieSession.fireAllRules();
 		System.out.println(firedRules);
@@ -116,5 +91,36 @@ public class DiseaseService {
 
 	public PatientDisease findPatientDisease(Integer id) {
 		return patientDiseaseRepository.getOne(id);
+	}
+
+	private void addFactInMemory(KieSession kieSession, List<Symptom> symptoms, Patient patient,
+			List<Disease> diseases) {
+
+		for (Symptom symptom : symptoms) {
+			kieSession.insert(symptom);
+		}
+
+		List<PatientDisease> patientDiseases = patientDiseaseRepository.getPatientDiseases(patient.getId());
+		for (PatientDisease patientDisease : patientDiseases) {
+			kieSession.insert(patientDisease);
+			List<PatientCure> patientCures = patientCureRepository.getPatientCures(patientDisease.getId());
+
+			for (PatientCure patientCure : patientCures) {
+				kieSession.insert(patientCure);
+			}
+		}
+
+		for (Disease disease : diseases) {
+			disease.setNumSymptoms(0L);
+			disease.setSpecificSymptoms(0L);
+			for (DiseaseSymptom diseaseSymptom : disease.getDiseaseSymptoms()) {
+				disease.setSymptoms(diseaseSymptom.getSymptom().getName());
+
+			}
+			if (!disease.getDiseaseSymptoms().isEmpty()) {
+				kieSession.insert(disease);
+			}
+		}
+
 	}
 }

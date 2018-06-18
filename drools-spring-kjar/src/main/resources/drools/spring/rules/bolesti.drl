@@ -1,0 +1,180 @@
+//created on: 15.06.2018.
+package drools.spring.rules
+
+import drools.spring.example.model.Symptom;
+import drools.spring.example.model.Disease;
+import drools.spring.example.model.SelectedDisease;
+import drools.spring.example.model.PatientDisease;
+import drools.spring.example.model.PatientCure;
+
+rule "Postavi broj zadovoljenih simptoma za svaku bolest"
+	no-loop
+	lock-on-active true
+    when
+    
+    	 $d : Disease( $symptoms : symptoms )
+    	 Symptom( name memberOf $symptoms )
+         accumulate ( $s : Symptom( name memberOf $symptoms );
+        			$count : count($s))
+    then
+    	modify($d){ setNumSymptoms($count); }
+
+end
+
+
+rule "Pacijent bolovao od prehlade ili groznice u poslednjih 60 dana"
+	no-loop
+	lock-on-active true
+    when
+    	 $d : Disease(name == "sinusna infekcija", $numSymptoms : numSymptoms, specificSymptoms == 0L )
+    	 $pd : PatientDisease( disease.name in  ("prehlada", "groznica"), dateBefore(60) )
+    	
+    then
+    	$d.setNumSymptoms($numSymptoms + 1);
+    	$d.setSpecificSymptoms(1L);
+    	update($d);
+end
+
+
+rule "U poslednjih 6 meseci zabeleženo barem 10 sluèajeva u kojem je pacijent imao visok pritisak"
+	no-loop
+	lock-on-active true
+    when
+    	 Number(intValue >= 10) from accumulate(
+             $pd : PatientDisease( disease.name == 'visok krvni pritisak', dateBeforeMonth(6) ),
+            count($pd)
+        )
+    	 $d : Disease(name == "hipertenzija", $numSymptoms : numSymptoms,  numSymptoms == 0L )
+
+    	
+    then
+    	modify($d){ setNumSymptoms(1L); }
+end
+
+
+rule "Pacijent boluje od hipertenzije više od 6 meseci"
+	no-loop
+	lock-on-active true
+    when
+    	 $d : Disease(name == "hronicna bubrezna bolest", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms )
+    	 $pd : PatientDisease( disease.name == "hipertenzija", dateAfterMonth(6) )
+    	
+    then
+    	$d.setNumSymptoms($numSymptoms + 1);
+    	$d.setSpecificSymptoms($specificSymptoms + 1);
+    	update($d);
+    	
+end
+
+
+rule "Pacijent boluje od dijabetes"
+	no-loop
+	lock-on-active true
+    when
+    	 $d : Disease(name == "hronicna bubrezna bolest", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms )
+    	 $pd : PatientDisease( disease.name == "dijabetes")
+    	
+    then
+    	$d.setNumSymptoms($numSymptoms + 1);
+    	$d.setSpecificSymptoms($specificSymptoms + 1);
+    	update($d);
+    	
+end
+
+
+rule "U poslednjih 14 dana dijagnostikovana bolest koja kao simptom ima povišenu telesnu temperaturu"
+	no-loop
+	lock-on-active true
+    when
+    	 $d : Disease(name == "akutna bubrezna povreda", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms  )
+    	 PatientDisease( $idD : disease.id, dateBefore(14) )
+    	 Disease(id == $idD && (symptoms contains "temperatura od 40 do 41" || symptoms contains "temperatura veca od 38") )
+    then
+    	$d.setNumSymptoms($numSymptoms + 1);
+    	$d.setSpecificSymptoms($specificSymptoms + 1);
+    	update($d);
+end
+
+
+rule "U poslednjih 21 dan dijagnostikovana bolest za koju je primao antibiotike"
+	no-loop
+	lock-on-active true
+    when
+    	 $d : Disease(name == "akutna bubrezna povreda", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms  )
+    	 PatientDisease( $idD : disease.id, dateBefore(21) )
+    	 PatientCure(patientDisease.id == $idD, cure.group.name == "antibiotik")
+    	
+    then
+    	$d.setNumSymptoms($numSymptoms + 1);
+    	$d.setSpecificSymptoms($specificSymptoms + 1);
+    	update($d);
+end
+
+
+rule "Zadovoljeni svi simptomi"
+	salience 100
+	no-loop
+    when
+    	 $d : Disease(diseaseSymptoms.size() == numSymptoms)
+    	 $s : SelectedDisease()
+    then
+    	
+    	modify($s){ setName($d.getName()); }
+end
+
+
+rule "Bolest grupa 1"
+	salience 50
+	no-loop
+    when
+    	 $d : Disease(groupe == "grupa 1", numSymptoms >= 7)
+    	 $s : SelectedDisease(name == "bolest")
+    then
+    	modify($s){ setName($d.getName()); }
+
+end
+
+rule "Bolest grupa 1 - 2"
+	salience 40
+	no-loop
+    when
+    	 $d : Disease(groupe == "grupa 1", numSymptoms >= 6)
+    	 $s : SelectedDisease(name == "bolest")
+    then
+    	modify($s){ setName($d.getName()); }
+
+end
+
+
+rule "Bolest grupa 1 - 3"
+	salience 30
+	no-loop
+    when
+    	 $d : Disease(groupe == "grupa 1", numSymptoms >= 5)
+    	 $s : SelectedDisease(name == "bolest")
+    then
+    	modify($s){ setName($d.getName()); }
+
+end
+
+rule "Bolest grupa 1 - 4"
+	salience 20
+	no-loop
+    when
+    	 $d : Disease(groupe == "grupa 1", numSymptoms >= 4)
+    	 $s : SelectedDisease(name == "bolest")
+    then
+    	modify($s){ setName($d.getName()); }
+
+end
+
+rule "Bolest grupa 3"
+	salience 90
+	no-loop
+    when
+    	 $d : Disease(groupe == "grupa 3", numSymptoms - specificSymptoms >= 2, specificSymptoms >= 1)
+    	 $s : SelectedDisease(name == "bolest")
+    then
+    	modify($s){ setName($d.getName()); }
+
+end

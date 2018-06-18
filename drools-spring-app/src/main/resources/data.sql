@@ -3,9 +3,13 @@
 insert into user (username, password) values ('admin', '$2a$12$ngKnzZiiHRoVIDB/RjJ8hOr5lIdTlzxksOgrPVGjXYk4wSFp.Cql6');
 -- password is 'doctor' (bcrypt encoded)
 insert into user (username, password, first_name, last_name, expertise) values ('doctor', '$2a$12$puWleO7YQE2yRh6ic1eniuftSLDfBE0NGoAqZEybHJktAy8Ms34Iu', 'dr', 'Docto', 'dr mr');
+insert into user (username, password, first_name, last_name, expertise) values ('doctor1', '$2a$12$puWleO7YQE2yRh6ic1eniuftSLDfBE0NGoAqZEybHJktAy8Ms34Iu', 'dr', 'Docto', 'dr mr');
+insert into user (username, password, first_name, last_name, expertise) values ('doctor2', '$2a$12$puWleO7YQE2yRh6ic1eniuftSLDfBE0NGoAqZEybHJktAy8Ms34Iu', 'dr', 'Docto', 'dr mr');
 
 insert into user_roles (user_id, roles) values (1, 0); -- admin has ROLE_ADMIN
 insert into user_roles (user_id, roles) values (2, 1); -- doctor has ROLE_DOCTOR
+insert into user_roles (user_id, roles) values (3, 1); -- doctor has ROLE_DOCTOR
+insert into user_roles (user_id, roles) values (4, 1); -- doctor has ROLE_DOCTOR
 
 insert into cure_group (name) value ('analgetik');
 insert into cure_group (name) value ('antibiotik');
@@ -128,19 +132,65 @@ insert into symptom (name) values ('*u poslednjih 21 dan primao antibiotike');
 insert into component (name) values ('component1');
 insert into component (name) values ('component2');
 
-insert into cure (name, group_id) values ('lek1', 2);
+insert into cure (name, group_id) values ('lek1', 1);
+insert into cure (name, group_id) values ('lek2', 2);
 
 insert into cure_component (cure_id, component_id) values (1,1);
 
 
-insert into patient (first_name, last_name) values ('Petar', 'Petrovic');
-insert into patient (first_name, last_name) values ('Zika', 'Pavlovic');
+insert into patient (first_name, last_name, doctor_id) values ('Petar', 'Petrovic', 2);
+insert into patient (first_name, last_name, doctor_id) values ('Zika', 'Pavlovic', 2);
 
-insert into patient_disease (disease_id, patient_id, date) values (1, 1, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (1, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (1, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (1, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (1, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (1, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (1, 1, 2, '2018-06-17 13:43:58');
+
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 1, 2, '2018-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 1, 2, '2018-06-17 13:43:58');
+
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 2, 2, '2015-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 2, 2, '2015-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 2, 2, '2015-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 2, 2, '2015-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 2, 2, '2015-06-17 13:43:58');
+insert into patient_disease (disease_id, patient_id, doctor_id, date) values (3, 2, 2, '2015-06-17 13:43:58');
+
+
 /*insert into patient_disease (disease_id, patient_id, date) values (5, 1, '2017-01-17 13:43:58');
 insert into patient_disease (disease_id, patient_id, date) values (6, 1, '2018-01-17 13:43:58');
 */
-insert into patient_cure (cure_id, patient_disease_id) values (1, 1);
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 1, 2, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 1, 3, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 1, 4, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 1, 2, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 1, 2, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 1, 3, '2018-06-17 13:43:58');
+/*
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (1, 13, 2, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (1, 13, 2, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (1, 13, 2, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (1, 13, 2, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (1, 13, 2, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (1, 13, 2, '2018-06-17 13:43:58');
+*/
+
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 7, 3, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 7, 3, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 7, 3, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 7, 3, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 7, 3, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 7, 3, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 7, 3, '2018-06-17 13:43:58');
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (2, 7, 3, '2018-06-17 13:43:58');
+
+insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (1, 14, 2, '2018-06-17 13:43:58');
 
 insert into alergic_cure (cure_id, patient_id) values (1,1);
 

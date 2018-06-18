@@ -2,9 +2,11 @@ package drools.spring.example.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Patient {
@@ -17,6 +19,9 @@ public class Patient {
 
 	@Column
 	private String lastName;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	private User doctor;
 
 	public Integer getId() {
 		return id;
@@ -40,6 +45,14 @@ public class Patient {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public User getDoctor() {
+		return doctor;
+	}
+
+	public void setDoctor(User doctor) {
+		this.doctor = doctor;
 	}
 
 }

@@ -18,6 +18,7 @@ import drools.spring.example.model.CureComponent;
 import drools.spring.example.model.Patient;
 import drools.spring.example.model.PatientCure;
 import drools.spring.example.model.PatientDisease;
+import drools.spring.example.model.User;
 import drools.spring.example.repository.AlergicComponentRepository;
 import drools.spring.example.repository.AlergicCureRepository;
 import drools.spring.example.repository.CureComponentRepository;
@@ -79,9 +80,39 @@ public class CureService {
 		return cureComponentRepository.getCureComponents(id);
 	}
 
-	public boolean addPatientCure(List<Cure> cures, Patient patient, PatientDisease patientDisease) {
+	public boolean addPatientCure(List<Cure> cures, Patient patient, PatientDisease patientDisease, User doctor) {
 		KieSession kieSession = kieContainer.newKieSession();
 
+		addFactInMemory(kieSession, cures, patient);
+
+		int firedRules = kieSession.fireAllRules();
+		System.out.println(firedRules);
+
+		kieSession.dispose();
+
+		for (Cure cure : cures) {
+			if (cure.isAlergic()) {
+				return true;
+			}
+
+			for (CureComponent cureComponent : cure.getComponents()) {
+
+				if (cureComponent.isAlergic()) {
+					return true;
+				}
+			}
+		}
+
+		for (Cure cure : cures) {
+			PatientCure patientCure = new PatientCure(cure, patientDisease, doctor);
+			patientCureRepository.save(patientCure);
+		}
+
+		return false;
+
+	}
+
+	private void addFactInMemory(KieSession kieSession, List<Cure> cures, Patient patient) {
 		for (Cure cure : cures) {
 			cure.setAlergic(false);
 			kieSession.insert(cure);
@@ -108,38 +139,6 @@ public class CureService {
 		for (AlergicCure alergicCure : alergicCures) {
 			kieSession.insert(alergicCure);
 		}
-
-		int firedRules = kieSession.fireAllRules();
-		System.out.println(firedRules);
-
-		for (Cure cure : cures) {
-			System.out.println(cure.isAlergic());
-
-			if (cure.isAlergic()) {
-				kieSession.dispose();
-				return true;
-			}
-
-			for (CureComponent cureComponent : cure.getComponents()) {
-				System.out.println(cureComponent.isAlergic());
-
-				if (cureComponent.isAlergic()) {
-					kieSession.dispose();
-					return true;
-
-				}
-			}
-		}
-
-		kieSession.dispose();
-
-		for (Cure cure : cures) {
-			PatientCure patientCure = new PatientCure(cure, patientDisease);
-			patientCureRepository.save(patientCure);
-
-		}
-
-		return false;
 
 	}
 

@@ -27,16 +27,21 @@ public class PatientDisease {
 	@JoinColumn(name = "disease_id", nullable = false)
 	private Disease disease;
 
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+	@JoinColumn(name = "doctor_id", nullable = false)
+	private User doctor;
+
 	private Date date;
 
 	public PatientDisease() {
 
 	}
 
-	public PatientDisease(Patient patient, Disease disease) {
+	public PatientDisease(Patient patient, Disease disease, User doctor) {
 		super();
 		this.patient = patient;
 		this.disease = disease;
+		this.doctor = doctor;
 		this.date = new Date();
 	}
 
@@ -72,6 +77,14 @@ public class PatientDisease {
 		this.date = date;
 	}
 
+	public User getDoctor() {
+		return doctor;
+	}
+
+	public void setDoctor(User doctor) {
+		this.doctor = doctor;
+	}
+
 	public boolean dateBefore(Integer days) {
 		Date today = new Date();
 		Calendar cal = new GregorianCalendar();
@@ -92,7 +105,6 @@ public class PatientDisease {
 		cal.setTime(today);
 		cal.add(Calendar.MONTH, -month);
 		Date todayBefore = cal.getTime();
-		System.out.println(todayBefore);
 
 		if (todayBefore.before(this.date)) {
 			return true;
@@ -108,7 +120,6 @@ public class PatientDisease {
 		cal.setTime(today);
 		cal.add(Calendar.MONTH, -month);
 		Date todayBefore = cal.getTime();
-		System.out.println(todayBefore);
 
 		if (todayBefore.after(this.date)) {
 			return true;
