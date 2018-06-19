@@ -1,7 +1,12 @@
 package drools.spring.example.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +25,9 @@ public class SymptonService {
 
 	@Autowired
 	private DiseaseSymptomRepository diseaseSymptomRepository;
+
+	@Autowired
+	private KieContainer kieContainer;
 
 	public Symptom addSymptom(Symptom symptom) {
 		return symptomRepository.save(symptom);
@@ -65,6 +73,29 @@ public class SymptonService {
 
 	public List<DiseaseSymptom> findBySymptomId(Integer id) {
 		return diseaseSymptomRepository.findBySymptomId(id);
+	}
+
+	public List<DiseaseSymptom> findSymotoms(String diseaseName) {
+		KieSession kieSession = kieContainer.newKieSession();
+		List<DiseaseSymptom> diseaseSymptoms = diseaseSymptomRepository.findAll();
+
+		for (DiseaseSymptom diseaseSymptom : diseaseSymptoms) {
+			kieSession.insert(diseaseSymptom);
+		}
+
+		QueryResults results = kieSession.getQueryResults("Pretraga simptoma", diseaseName);
+		System.out.println(results.size());
+
+		List<DiseaseSymptom> diseaseSymptomsRes = new ArrayList<>();
+		for (QueryResultsRow row : results) {
+			DiseaseSymptom diseaseSymptom = (DiseaseSymptom) row.get("$diseaseSymptom");
+
+			System.out.println(diseaseSymptom.getDisease().getName());
+
+			diseaseSymptomsRes.add(diseaseSymptom);
+
+		}
+		return diseaseSymptomsRes;
 	}
 
 }

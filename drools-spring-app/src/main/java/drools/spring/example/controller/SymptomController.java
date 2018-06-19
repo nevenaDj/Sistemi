@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import drools.spring.example.dto.SymptomDTO;
+import drools.spring.example.model.DiseaseSymptom;
 import drools.spring.example.model.Symptom;
 import drools.spring.example.service.SymptonService;
 
@@ -106,6 +108,26 @@ public class SymptomController {
 	public ResponseEntity<Long> getCount() {
 		Long count = symptonService.getCount();
 		return new ResponseEntity<>(count, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/symptoms/find", params = { "disease" })
+	@PreAuthorize("hasRole('ROLE_DOCTOR')")
+	public ResponseEntity<List<SymptomDTO>> findSymptoms(@RequestParam("disease") String disease) {
+		List<DiseaseSymptom> diseaseSymptoms = symptonService.findSymotoms(disease);
+
+		if (diseaseSymptoms.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<SymptomDTO> symptomDTOs = new ArrayList<>();
+		for (DiseaseSymptom diseaseSymptom : diseaseSymptoms) {
+			SymptomDTO symptomDTO = modelMapper.map(diseaseSymptom.getSymptom(), SymptomDTO.class);
+			symptomDTO.setSpecificSymptom(diseaseSymptom.isSpecificSymptom());
+			symptomDTOs.add(symptomDTO);
+
+		}
+
+		return new ResponseEntity<>(symptomDTOs, HttpStatus.OK);
 	}
 
 }

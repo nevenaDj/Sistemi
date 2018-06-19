@@ -1,9 +1,18 @@
 package drools.spring.example.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +26,7 @@ import drools.spring.example.model.PatientDisease;
 import drools.spring.example.model.SelectedDisease;
 import drools.spring.example.model.Symptom;
 import drools.spring.example.repository.DiseaseRepository;
+import drools.spring.example.repository.DiseaseSymptomRepository;
 import drools.spring.example.repository.PatientCureRepository;
 import drools.spring.example.repository.PatientDiseaseRepsoitory;
 
@@ -25,6 +35,9 @@ public class DiseaseService {
 
 	@Autowired
 	private DiseaseRepository diseaseRepository;
+
+	@Autowired
+	private DiseaseSymptomRepository diseaseSymptomRepository;
 
 	@Autowired
 	private PatientDiseaseRepsoitory patientDiseaseRepository;
@@ -89,6 +102,40 @@ public class DiseaseService {
 
 	}
 
+	public List<Disease> findDiseases(List<Symptom> symptoms) {
+		KieSession kieSession = kieContainer.newKieSession();
+		addFactInMemoryFind(kieSession, symptoms);
+
+		QueryResults results = kieSession.getQueryResults("Pretraga bolesti");
+		System.out.println(results.size());
+
+		Map<Integer, Integer> diseasesSort = new HashMap<>();
+		Map<Integer, Disease> diseases = new HashMap<>();
+		for (QueryResultsRow row : results) {
+			Set<Disease> diseasesSet = (Set<Disease>) row.get("$diseases");
+
+			for (Disease disease : diseasesSet) {
+				System.out.println(disease.getName());
+				if (diseasesSort.containsKey(disease.getId())) {
+					Integer count = diseasesSort.get(disease.getId());
+					diseasesSort.put(disease.getId(), count + 1);
+				} else {
+					diseasesSort.put(disease.getId(), 1);
+					diseases.put(disease.getId(), disease);
+				}
+			}
+
+		}
+
+		List<Disease> diseasesResult = new ArrayList<>();
+		for (Entry<Integer, Integer> e : entriesSortedByValues(diseasesSort)) {
+			System.out.println(e.getKey());
+			diseasesResult.add(diseases.get(e.getKey()));
+		}
+		return diseasesResult;
+
+	}
+
 	public PatientDisease findPatientDisease(Integer id) {
 		return patientDiseaseRepository.getOne(id);
 	}
@@ -122,5 +169,32 @@ public class DiseaseService {
 			}
 		}
 
+	}
+
+	private void addFactInMemoryFind(KieSession kieSession, List<Symptom> symptoms) {
+		for (Symptom symptom : symptoms) {
+			kieSession.insert(symptom);
+		}
+
+		List<DiseaseSymptom> diseaseSymptoms = diseaseSymptomRepository.findAll();
+
+		for (DiseaseSymptom diseaseSymptom : diseaseSymptoms) {
+			kieSession.insert(diseaseSymptom);
+		}
+
+	}
+
+	static <K, V extends Comparable<? super V>> List<Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
+
+		List<Entry<K, V>> sortedEntries = new ArrayList<Entry<K, V>>(map.entrySet());
+
+		Collections.sort(sortedEntries, new Comparator<Entry<K, V>>() {
+			@Override
+			public int compare(Entry<K, V> e1, Entry<K, V> e2) {
+				return e2.getValue().compareTo(e1.getValue());
+			}
+		});
+
+		return sortedEntries;
 	}
 }
