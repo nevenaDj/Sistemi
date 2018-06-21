@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class AlergicComponent {
+public class AllergyComponent {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -23,7 +23,7 @@ public class AlergicComponent {
 	@JoinColumn(name = "patient_id", nullable = false)
 	private Patient patient;
 
-	public AlergicComponent() {
+	public AllergyComponent() {
 
 	}
 

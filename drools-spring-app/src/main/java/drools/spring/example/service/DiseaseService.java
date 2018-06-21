@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
+import org.kie.api.KieServices;
+import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.QueryResults;
@@ -73,11 +77,17 @@ public class DiseaseService {
 	}
 
 	public Disease findDisease(List<Symptom> symptoms, Patient patient) {
-		KieSession kieSession = kieContainer.newKieSession();
+		KieServices ks = KieServices.Factory.get();
+		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
+		kbconf.setOption(EventProcessingOption.STREAM);
+		KieBase kbase = kieContainer.newKieBase(kbconf);
+
+		KieSession kieSession = kbase.newKieSession();
 
 		List<Disease> diseases = diseaseRepository.findAll();
 		addFactInMemory(kieSession, symptoms, patient, diseases);
 
+		kieSession.getAgenda().getAgendaGroup("bolesti").setFocus();
 		int firedRules = kieSession.fireAllRules();
 		System.out.println(firedRules);
 
@@ -86,6 +96,7 @@ public class DiseaseService {
 
 		kieSession.insert(d);
 
+		kieSession.getAgenda().getAgendaGroup("pretraga bolesti").setFocus();
 		firedRules = kieSession.fireAllRules();
 		System.out.println(firedRules);
 
@@ -103,7 +114,12 @@ public class DiseaseService {
 	}
 
 	public List<Disease> findDiseases(List<Symptom> symptoms) {
-		KieSession kieSession = kieContainer.newKieSession();
+		KieServices ks = KieServices.Factory.get();
+		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
+		kbconf.setOption(EventProcessingOption.STREAM);
+		KieBase kbase = kieContainer.newKieBase(kbconf);
+
+		KieSession kieSession = kbase.newKieSession();
 		addFactInMemoryFind(kieSession, symptoms);
 
 		QueryResults results = kieSession.getQueryResults("Pretraga bolesti");
@@ -138,6 +154,10 @@ public class DiseaseService {
 
 	public PatientDisease findPatientDisease(Integer id) {
 		return patientDiseaseRepository.getOne(id);
+	}
+
+	public List<PatientDisease> getPatientDiseases(Integer id) {
+		return patientDiseaseRepository.getPatientDiseases(id);
 	}
 
 	private void addFactInMemory(KieSession kieSession, List<Symptom> symptoms, Patient patient,

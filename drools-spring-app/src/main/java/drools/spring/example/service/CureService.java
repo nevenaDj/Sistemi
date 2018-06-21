@@ -3,6 +3,10 @@ package drools.spring.example.service;
 import java.util.HashSet;
 import java.util.List;
 
+import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
+import org.kie.api.KieServices;
+import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import drools.spring.example.model.AlergicComponent;
-import drools.spring.example.model.AlergicCure;
+import drools.spring.example.model.AllergyComponent;
+import drools.spring.example.model.AllergyCure;
 import drools.spring.example.model.Component;
 import drools.spring.example.model.Cure;
 import drools.spring.example.model.CureComponent;
@@ -19,8 +23,8 @@ import drools.spring.example.model.Patient;
 import drools.spring.example.model.PatientCure;
 import drools.spring.example.model.PatientDisease;
 import drools.spring.example.model.User;
-import drools.spring.example.repository.AlergicComponentRepository;
-import drools.spring.example.repository.AlergicCureRepository;
+import drools.spring.example.repository.AllergyComponentRepository;
+import drools.spring.example.repository.AllergyCureRepository;
 import drools.spring.example.repository.CureComponentRepository;
 import drools.spring.example.repository.CureRepository;
 import drools.spring.example.repository.PatientCureRepository;
@@ -32,10 +36,10 @@ public class CureService {
 	private CureRepository cureRepository;
 
 	@Autowired
-	private AlergicComponentRepository alergicComponentRepository;
+	private AllergyComponentRepository alergicComponentRepository;
 
 	@Autowired
-	private AlergicCureRepository alergicCureRepository;
+	private AllergyCureRepository alergicCureRepository;
 
 	@Autowired
 	private CureComponentRepository cureComponentRepository;
@@ -80,11 +84,21 @@ public class CureService {
 		return cureComponentRepository.getCureComponents(id);
 	}
 
+	public List<PatientCure> getPatientCures(Integer id) {
+		return patientCureRepository.getPatientCures(id);
+	}
+
 	public boolean addPatientCure(List<Cure> cures, Patient patient, PatientDisease patientDisease, User doctor) {
-		KieSession kieSession = kieContainer.newKieSession();
+		KieServices ks = KieServices.Factory.get();
+		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
+		kbconf.setOption(EventProcessingOption.STREAM);
+		KieBase kbase = kieContainer.newKieBase(kbconf);
+
+		KieSession kieSession = kbase.newKieSession();
 
 		addFactInMemory(kieSession, cures, patient);
 
+		kieSession.getAgenda().getAgendaGroup("lekovi").setFocus();
 		int firedRules = kieSession.fireAllRules();
 		System.out.println(firedRules);
 
@@ -128,15 +142,15 @@ public class CureService {
 			}
 		}
 
-		List<AlergicComponent> alergicComponents = alergicComponentRepository.findAlergicComponents(patient.getId());
+		List<AllergyComponent> alergicComponents = alergicComponentRepository.getAlllergyComponents(patient.getId());
 
-		for (AlergicComponent alergicComponent : alergicComponents) {
+		for (AllergyComponent alergicComponent : alergicComponents) {
 			kieSession.insert(alergicComponent);
 		}
 
-		List<AlergicCure> alergicCures = alergicCureRepository.findAlergicCures(patient.getId());
+		List<AllergyCure> alergicCures = alergicCureRepository.getAllergyCures(patient.getId());
 
-		for (AlergicCure alergicCure : alergicCures) {
+		for (AllergyCure alergicCure : alergicCures) {
 			kieSession.insert(alergicCure);
 		}
 

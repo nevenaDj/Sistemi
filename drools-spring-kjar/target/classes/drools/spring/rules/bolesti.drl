@@ -10,6 +10,7 @@ import drools.spring.example.model.PatientCure;
 rule "Postavi broj zadovoljenih simptoma za svaku bolest"
 	no-loop
 	lock-on-active true
+	agenda-group "bolesti"
     when
     
     	 $d : Disease( $symptoms : symptoms )
@@ -25,6 +26,7 @@ end
 rule "Pacijent bolovao od prehlade ili groznice u poslednjih 60 dana"
 	no-loop
 	lock-on-active true
+	agenda-group "bolesti"
     when
     	 $d : Disease(name == "sinusna infekcija", $numSymptoms : numSymptoms, specificSymptoms == 0L )
     	 $pd : PatientDisease( disease.name in  ("prehlada", "groznica"), dateBefore(60) )
@@ -39,6 +41,7 @@ end
 rule "U poslednjih 6 meseci zabeleženo barem 10 sluèajeva u kojem je pacijent imao visok pritisak"
 	no-loop
 	lock-on-active true
+	agenda-group "bolesti"
     when
     	 Number(intValue >= 10) from accumulate(
              $pd : PatientDisease( disease.name == 'visok krvni pritisak', dateBeforeMonth(6) ),
@@ -55,6 +58,7 @@ end
 rule "Pacijent boluje od hipertenzije više od 6 meseci"
 	no-loop
 	lock-on-active true
+	agenda-group "bolesti"
     when
     	 $d : Disease(name == "hronicna bubrezna bolest", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms )
     	 $pd : PatientDisease( disease.name == "hipertenzija", dateAfterMonth(6) )
@@ -70,6 +74,7 @@ end
 rule "Pacijent boluje od dijabetes"
 	no-loop
 	lock-on-active true
+	agenda-group "bolesti"
     when
     	 $d : Disease(name == "hronicna bubrezna bolest", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms )
     	 $pd : PatientDisease( disease.name == "dijabetes")
@@ -85,6 +90,7 @@ end
 rule "U poslednjih 14 dana dijagnostikovana bolest koja kao simptom ima povišenu telesnu temperaturu"
 	no-loop
 	lock-on-active true
+	agenda-group "bolesti"
     when
     	 $d : Disease(name == "akutna bubrezna povreda", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms  )
     	 PatientDisease( $idD : disease.id, dateBefore(14) )
@@ -99,6 +105,7 @@ end
 rule "U poslednjih 21 dan dijagnostikovana bolest za koju je primao antibiotike"
 	no-loop
 	lock-on-active true
+	agenda-group "bolesti"
     when
     	 $d : Disease(name == "akutna bubrezna povreda", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms  )
     	 PatientDisease( $idD : disease.id, dateBefore(21) )
@@ -112,6 +119,7 @@ end
 
 
 rule "Zadovoljeni svi simptomi"
+	agenda-group "pretraga bolesti"
 	salience 100
 	no-loop
     when
@@ -124,6 +132,7 @@ end
 
 
 rule "Bolest grupa 1"
+	agenda-group "pretraga bolesti"
 	salience 50
 	no-loop
     when
@@ -135,6 +144,7 @@ rule "Bolest grupa 1"
 end
 
 rule "Bolest grupa 1 - 2"
+	agenda-group "pretraga bolesti"
 	salience 40
 	no-loop
     when
@@ -147,6 +157,7 @@ end
 
 
 rule "Bolest grupa 1 - 3"
+	agenda-group "pretraga bolesti"
 	salience 30
 	no-loop
     when
@@ -158,6 +169,7 @@ rule "Bolest grupa 1 - 3"
 end
 
 rule "Bolest grupa 1 - 4"
+	agenda-group "pretraga bolesti"
 	salience 20
 	no-loop
     when
@@ -169,6 +181,7 @@ rule "Bolest grupa 1 - 4"
 end
 
 rule "Bolest grupa 3"
+	agenda-group "pretraga bolesti"
 	salience 90
 	no-loop
     when

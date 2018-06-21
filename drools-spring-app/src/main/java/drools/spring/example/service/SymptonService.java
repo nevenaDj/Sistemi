@@ -3,6 +3,10 @@ package drools.spring.example.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
+import org.kie.api.KieServices;
+import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.QueryResults;
@@ -67,6 +71,10 @@ public class SymptonService {
 		return symptomRepository.getDiseaseSymptoms(id);
 	}
 
+	public List<Symptom> getSymptomsShow() {
+		return diseaseSymptomRepository.getSymptomsShow();
+	}
+
 	public DiseaseSymptom addDiseaseSymptom(DiseaseSymptom diseaseSymptom) {
 		return diseaseSymptomRepository.save(diseaseSymptom);
 	}
@@ -76,7 +84,12 @@ public class SymptonService {
 	}
 
 	public List<DiseaseSymptom> findSymotoms(String diseaseName) {
-		KieSession kieSession = kieContainer.newKieSession();
+		KieServices ks = KieServices.Factory.get();
+		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
+		kbconf.setOption(EventProcessingOption.STREAM);
+		KieBase kbase = kieContainer.newKieBase(kbconf);
+
+		KieSession kieSession = kbase.newKieSession();
 		List<DiseaseSymptom> diseaseSymptoms = diseaseSymptomRepository.findAll();
 
 		for (DiseaseSymptom diseaseSymptom : diseaseSymptoms) {

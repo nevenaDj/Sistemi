@@ -192,7 +192,7 @@ insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (
 
 insert into patient_cure (cure_id, patient_disease_id, doctor_id, date) values (1, 14, 2, '2018-06-17 13:43:58');
 
-insert into alergic_cure (cure_id, patient_id) values (1,1);
+insert into allergy_cure (cure_id, patient_id) values (1,1);
 
 /*insert into alergic_component (component_id, patient_id) values (1,2);
 */

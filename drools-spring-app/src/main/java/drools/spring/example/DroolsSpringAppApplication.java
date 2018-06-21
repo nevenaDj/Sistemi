@@ -42,6 +42,7 @@ public class DroolsSpringAppApplication {
 		KieContainer kContainer = ks
 				.newKieContainer(ks.newReleaseId("drools-spring", "drools-spring-kjar", "0.0.1-SNAPSHOT"));
 		KieScanner kScanner = ks.newKieScanner(kContainer);
+
 		kScanner.start(10_000);
 		return kContainer;
 	}

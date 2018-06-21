@@ -3,17 +3,18 @@ package drools.spring.rules
 
 import drools.spring.example.model.Cure;
 import drools.spring.example.model.CureComponent;
-import drools.spring.example.model.AlergicCure;
-import drools.spring.example.model.AlergicComponent;
+import drools.spring.example.model.AllergyCure;
+import drools.spring.example.model.AllergyComponent;
 
 
 
 rule "Alergija na lek"
+	agenda-group "lekovi"
 	no-loop
 	lock-on-active true
     when
         $c : Cure( $id : id )
-        AlergicCure( cure.id == $id)
+       AllergyCure( cure.id == $id)
         
     then
         modify($c){ setAlergic(true); }
@@ -22,11 +23,12 @@ end
 
 
 rule "Alergija na komponentu iz leka"
+	agenda-group "lekovi"
 	no-loop
 	lock-on-active true
     when
         $c : CureComponent( $id : component.id )
-        AlergicComponent( component.id == $id)
+        AllergyComponent( component.id == $id)
         
     then
         modify($c){ setAlergic(true); }

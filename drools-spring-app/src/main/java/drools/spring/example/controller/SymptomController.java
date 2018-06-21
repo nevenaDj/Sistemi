@@ -70,6 +70,19 @@ public class SymptomController {
 
 	}
 
+	@GetMapping("/symptom/show")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DOCTOR')")
+	public ResponseEntity<List<SymptomDTO>> getAllSymptomsShow() {
+		List<Symptom> symptoms = symptonService.getSymptomsShow();
+		List<SymptomDTO> symptomDTOs = new ArrayList<>();
+		for (Symptom symptom : symptoms) {
+			symptomDTOs.add(modelMapper.map(symptom, SymptomDTO.class));
+		}
+
+		return new ResponseEntity<>(symptomDTOs, HttpStatus.OK);
+
+	}
+
 	@GetMapping("/symptom/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<SymptomDTO> getSymptom(@PathVariable Integer id) {
