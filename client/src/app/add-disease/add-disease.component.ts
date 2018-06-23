@@ -31,16 +31,13 @@ export class AddDiseaseComponent implements OnInit {
       id: null,
       name: '',
       symptoms: [
-        {
-          id: null,
-          name: ''
-        }
       ]
     };
 
     this.symptom = {
       id: null,
-      name: ''
+      name: '',
+      specificSymptom: false
     };
 
     this.getAllSymptoms();
@@ -48,6 +45,12 @@ export class AddDiseaseComponent implements OnInit {
   
 
   ngOnInit() {
+    if(window.location.href.indexOf("loaded") > -1) {}
+    else{
+      let win = (window as any);
+      win.location.href = "/#/admin/disease/loaded";
+      win.location.reload();
+    }
   }
 
   ngAfterViewInit() {
@@ -56,18 +59,28 @@ export class AddDiseaseComponent implements OnInit {
   } 
 
   save(){
+    console.log(this.disease);
     this.diseaseService.addDisease(this.disease)
-        .then(res => this.router.navigate(['/admin']));
+        .then(res => {
+          this.toastr.success('Bolest uspešno upisana.');
+          this.disease = {
+            id: null,
+            name: '',
+            symptoms: [
+            ]
+          };
+          window.location.reload();
+        }).catch(res => this.toastr.error('Prilikom upisa bolesti došlo je do greške.'));
   }
 
   saveSymptom(){
     console.log(this.symptom);
     this.symptomService.addSymptom(this.symptom)
         .then(res => { 
-          this.toastr.info('Simptom uspešno upisan.');
+          this.toastr.success('Simptom uspešno upisan.');
           this.symptom.name = '';
           window.location.reload();
-        });
+        }).catch(res => this.toastr.error('Prilikom upisa simptoma došlo je do greške.'));
   }
 
   getAllSymptoms(){

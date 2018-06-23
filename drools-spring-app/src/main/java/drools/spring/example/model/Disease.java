@@ -24,8 +24,17 @@ public class Disease {
 	@Column
 	private String name;
 
+	@Column
+	private String groupe;
+
 	@OneToMany(mappedBy = "disease", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
 	private Set<DiseaseSymptom> diseaseSymptoms = new HashSet<>();
+
+	@Transient
+	private boolean specfic1;
+
+	@Transient
+	private boolean specfic2;
 
 	@Transient
 	private Long numSymptoms;
@@ -35,9 +44,6 @@ public class Disease {
 
 	@Transient
 	private List<String> symptoms = new ArrayList<>();
-
-	@Column
-	private String groupe;
 
 	public Disease() {
 
@@ -107,6 +113,22 @@ public class Disease {
 
 	public void setSpecificSymptoms(Long specificSymptoms) {
 		this.specificSymptoms = specificSymptoms;
+	}
+
+	public boolean isSpecfic1() {
+		return specfic1;
+	}
+
+	public void setSpecfic1(boolean specfic1) {
+		this.specfic1 = specfic1;
+	}
+
+	public boolean isSpecfic2() {
+		return specfic2;
+	}
+
+	public void setSpecfic2(boolean specfic2) {
+		this.specfic2 = specfic2;
 	}
 
 }

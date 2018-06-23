@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { PatientService } from './patient.service';
 import { Router } from '@angular/router';
 
@@ -12,11 +13,15 @@ export class AddPatientComponent implements OnInit {
   patient: PatientInterface;
 
   constructor(private patientService: PatientService,
-              private router: Router) {
+              private router: Router,
+              private toastr: ToastsManager, 
+              private vcr: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vcr); 
     this.patient = {
       id: null,
       firstName: '',
-      lastName: ''
+      lastName: '',
+      doctor: null
     }
    }
 
@@ -25,10 +30,8 @@ export class AddPatientComponent implements OnInit {
 
   save(){
     this.patientService.addPatient(this.patient)
-      .then(res =>{
-        console.log(res); 
-        this.router.navigate(['home']);
-      });
+      .then(res => this.router.navigate(['home/patients/search']))
+      .catch(res => this.toastr.error('Prilikom upisa pacijenta došlo je do greške.'));
   }
 
 }

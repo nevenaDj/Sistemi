@@ -1,8 +1,6 @@
 package drools.spring.example.model;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -83,50 +81,6 @@ public class PatientDisease {
 
 	public void setDoctor(User doctor) {
 		this.doctor = doctor;
-	}
-
-	public boolean dateBefore(Integer days) {
-		Date today = new Date();
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(today);
-		cal.add(Calendar.DAY_OF_MONTH, -days);
-		Date todayBefore = cal.getTime();
-
-		if (todayBefore.before(this.date)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public boolean dateBeforeMonth(Integer month) {
-		Date today = new Date();
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(today);
-		cal.add(Calendar.MONTH, -month);
-		Date todayBefore = cal.getTime();
-
-		if (todayBefore.before(this.date)) {
-			return true;
-		}
-
-		return false;
-
-	}
-
-	public boolean dateAfterMonth(Integer month) {
-		Date today = new Date();
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(today);
-		cal.add(Calendar.MONTH, -month);
-		Date todayBefore = cal.getTime();
-
-		if (todayBefore.after(this.date)) {
-			return true;
-		}
-
-		return false;
-
 	}
 
 }

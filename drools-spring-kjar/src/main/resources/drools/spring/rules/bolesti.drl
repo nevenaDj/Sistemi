@@ -6,17 +6,24 @@ import drools.spring.example.model.Disease;
 import drools.spring.example.model.SelectedDisease;
 import drools.spring.example.model.PatientDisease;
 import drools.spring.example.model.PatientCure;
+import java.util.Date;
+
+global Date before60days;
+global Date before14days;
+global Date before21days;
+global Date before6month;
 
 rule "Postavi broj zadovoljenih simptoma za svaku bolest"
 	no-loop
 	lock-on-active true
 	agenda-group "bolesti"
-    when
-    
+    when    
     	 $d : Disease( $symptoms : symptoms )
     	 Symptom( name memberOf $symptoms )
-         accumulate ( $s : Symptom( name memberOf $symptoms );
-        			$count : count($s))
+         accumulate ( 
+         		$s : Symptom( name memberOf $symptoms );
+        		$count : count($s)
+        		)
     then
     	modify($d){ setNumSymptoms($count); }
 
@@ -29,7 +36,10 @@ rule "Pacijent bolovao od prehlade ili groznice u poslednjih 60 dana"
 	agenda-group "bolesti"
     when
     	 $d : Disease(name == "sinusna infekcija", $numSymptoms : numSymptoms, specificSymptoms == 0L )
-    	 $pd : PatientDisease( disease.name in  ("prehlada", "groznica"), dateBefore(60) )
+    	 $pd : PatientDisease( 
+    	 	disease.name in  ("prehlada", "groznica"), 
+    	 	before60days != null,
+    	 	before60days.before(date) )
     	
     then
     	$d.setNumSymptoms($numSymptoms + 1);
@@ -44,10 +54,16 @@ rule "U poslednjih 6 meseci zabeleženo barem 10 sluèajeva u kojem je pacijent im
 	agenda-group "bolesti"
     when
     	 Number(intValue >= 10) from accumulate(
-             $pd : PatientDisease( disease.name == 'visok krvni pritisak', dateBeforeMonth(6) ),
+             $pd : PatientDisease( 
+             	disease.name == 'visok krvni pritisak', 
+             	before6month != null,
+             	before6month.before(date) ),
             count($pd)
         )
-    	 $d : Disease(name == "hipertenzija", $numSymptoms : numSymptoms,  numSymptoms == 0L )
+    	 $d : Disease(
+    	 		name == "hipertenzija", 
+    	 		$numSymptoms : numSymptoms,  
+    	 		numSymptoms == 0L )
 
     	
     then
@@ -60,12 +76,20 @@ rule "Pacijent boluje od hipertenzije više od 6 meseci"
 	lock-on-active true
 	agenda-group "bolesti"
     when
-    	 $d : Disease(name == "hronicna bubrezna bolest", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms )
-    	 $pd : PatientDisease( disease.name == "hipertenzija", dateAfterMonth(6) )
+    	 $d : Disease(
+    	 		name == "hronicna bubrezna bolest", 
+    	 		$numSymptoms : numSymptoms, 
+    	 		$specificSymptoms : specificSymptoms, 
+    	 		specfic1 == false  )
+    	 $pd : PatientDisease( 
+    	 		disease.name == "hipertenzija", 
+    	 		before6month != null,
+    	 		before6month.after(date) )
     	
     then
     	$d.setNumSymptoms($numSymptoms + 1);
     	$d.setSpecificSymptoms($specificSymptoms + 1);
+    	$d.setSpecfic1(true);
     	update($d);
     	
 end
@@ -76,12 +100,17 @@ rule "Pacijent boluje od dijabetes"
 	lock-on-active true
 	agenda-group "bolesti"
     when
-    	 $d : Disease(name == "hronicna bubrezna bolest", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms )
+    	 $d : Disease(
+    	 	name == "hronicna bubrezna bolest", 
+    	 	$numSymptoms : numSymptoms, 
+    	 	$specificSymptoms : specificSymptoms, 
+    	 	specfic2 == false  )
     	 $pd : PatientDisease( disease.name == "dijabetes")
     	
     then
     	$d.setNumSymptoms($numSymptoms + 1);
     	$d.setSpecificSymptoms($specificSymptoms + 1);
+    	$d.setSpecfic2(true);
     	update($d);
     	
 end
@@ -92,12 +121,22 @@ rule "U poslednjih 14 dana dijagnostikovana bolest koja kao simptom ima povišenu
 	lock-on-active true
 	agenda-group "bolesti"
     when
-    	 $d : Disease(name == "akutna bubrezna povreda", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms  )
-    	 PatientDisease( $idD : disease.id, dateBefore(14) )
-    	 Disease(id == $idD && (symptoms contains "temperatura od 40 do 41" || symptoms contains "temperatura veca od 38") )
+    	 $d : Disease(
+    	 	name == "akutna bubrezna povreda", 
+    	 	$numSymptoms : numSymptoms, 
+    	 	$specificSymptoms : specificSymptoms, 
+    	 	specfic1 == false  )
+    	 PatientDisease( 
+    	 	$idD : disease.id, 
+    	 	before14days != null,
+    	 	before14days.before(date)  )
+    	 Disease(
+    	 		id == $idD && 
+    	 		(symptoms contains "temperatura od 40 do 41" || symptoms contains "temperatura veca od 38") )
     then
     	$d.setNumSymptoms($numSymptoms + 1);
     	$d.setSpecificSymptoms($specificSymptoms + 1);
+    	$d.setSpecfic1(true);
     	update($d);
 end
 
@@ -107,13 +146,21 @@ rule "U poslednjih 21 dan dijagnostikovana bolest za koju je primao antibiotike"
 	lock-on-active true
 	agenda-group "bolesti"
     when
-    	 $d : Disease(name == "akutna bubrezna povreda", $numSymptoms : numSymptoms, $specificSymptoms : specificSymptoms  )
-    	 PatientDisease( $idD : disease.id, dateBefore(21) )
+    	 $d : Disease(
+    	 		name == "akutna bubrezna povreda", 
+    	 		$numSymptoms : numSymptoms, 
+    	 		$specificSymptoms : specificSymptoms, 
+    	 		specfic2 == false  )
+    	 PatientDisease( 
+    	 	$idD : disease.id, 
+    	 	before21days != null,
+    	 	before21days.before(date) )
     	 PatientCure(patientDisease.id == $idD, cure.group.name == "antibiotik")
     	
     then
     	$d.setNumSymptoms($numSymptoms + 1);
     	$d.setSpecificSymptoms($specificSymptoms + 1);
+    	$d.setSpecfic2(true);
     	update($d);
 end
 
@@ -185,7 +232,10 @@ rule "Bolest grupa 3"
 	salience 90
 	no-loop
     when
-    	 $d : Disease(groupe == "grupa 3", numSymptoms - specificSymptoms >= 2, specificSymptoms >= 1)
+    	 $d : Disease(
+    	 		groupe == "grupa 3", 
+    	 		numSymptoms - specificSymptoms >= 2, 
+    	 		specificSymptoms >= 1)
     	 $s : SelectedDisease(name == "bolest")
     then
     	modify($s){ setName($d.getName()); }

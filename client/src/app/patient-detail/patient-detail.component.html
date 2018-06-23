@@ -1,0 +1,44 @@
+<br><br><br><br><br>
+<div class="row">
+    <div class="side-menu">
+        <div class="navbar-header">
+            <div class="brand-wrapper">
+                <button type="button" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+        </div>
+        <!-- Main Menu -->
+        <div class="side-menu-container w">
+            <ul class="nav navbar-nav ">
+                <li><a style="color: black;" (click)="gotoPatientDetail()"><span style="color: black;" class="glyphicon glyphicon-user"></span> Podaci o pacijentu</a></li>
+                <li><a style="color: black;" (click)="gotoResoner()"><span style="color: black;" class="glyphicon glyphicon-send"></span> Pokreni rezoner</a></li>
+                <li><a style="color: black;" (click)="gotoAddDiagnosis()" ><i style="color: black;" class="fa fa-keyboard-o" aria-hidden="true"></i> &nbsp; Uspostavi dijagnozu</a></li>
+                <!-- Dropdown-->
+                <li class="panel panel-default" id="dropdown">
+                    <a style="color: black;" data-toggle="collapse" href="#dropdown-lvl1">
+                        <i style="color: black;" class="fa fa-search" aria-hidden="true"></i> &nbsp; Pretraga <span class="caret"></span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-lvl1" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li><a style="color: black;" (click)="gotoSearchSymptoms()">Simptoma</a></li>
+                                <li><a style="color: black;" (click)="gotoSearchDiseases()">Bolesti</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+     <!-- Main Content -->
+    <div class="container-fluid">
+        <div class="side-body">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

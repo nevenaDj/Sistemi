@@ -1,0 +1,27 @@
+<br>
+<form style="margin-left: -100px;" class="form-horizontal" name="form" (ngSubmit)="save()">
+    <fieldset>
+    
+    <!-- Form Name -->
+    <legend class="leg">Dodaj alergiju pacijenta na sastojak leka</legend>
+    <br>
+    
+    <div class="form-group">
+      <label class="col-md-4 control-label">Sastojak leka </label>
+      <div class="col-md-4">
+          <select class="form-control selectpicker" data-live-search="true" [(ngModel)]="component" [ngModelOptions]="{standalone: true}" title="Sastojci.." >
+              <option *ngFor="let c of components" [ngValue]="c">{{c.name}}</option>
+          </select>
+        </div>
+    </div>  
+    
+    <!-- Button -->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="btn_continuar"></label>
+      <div class="col-md-4">
+        <button type="submit" name="btn_continuar" class="btn btn-primary right">Sačuvaj</button>
+      </div>
+    </div>
+    
+    </fieldset>
+</form>

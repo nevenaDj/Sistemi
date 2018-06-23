@@ -1,15 +1,10 @@
 package drools.spring.example.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Symptom {
@@ -19,9 +14,6 @@ public class Symptom {
 
 	@Column
 	private String name;
-
-	@OneToMany(mappedBy = "symptom", fetch = FetchType.LAZY)
-	private Set<DiseaseSymptom> diseaseSymptoms = new HashSet<>();
 
 	public Integer getId() {
 		return id;
@@ -37,14 +29,6 @@ public class Symptom {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Set<DiseaseSymptom> getDiseaseSymptoms() {
-		return diseaseSymptoms;
-	}
-
-	public void setDiseaseSymptoms(Set<DiseaseSymptom> diseaseSymptoms) {
-		this.diseaseSymptoms = diseaseSymptoms;
 	}
 
 }

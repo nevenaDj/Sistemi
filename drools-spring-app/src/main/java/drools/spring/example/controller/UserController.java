@@ -4,7 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
+import org.kie.api.KieServices;
+import org.kie.api.conf.EventProcessingOption;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,16 +40,35 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
+	HttpSession session;
+
+	@Autowired
+	private KieContainer kieContainer;
+
+	@Autowired
 	private ModelMapper modelMapper;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<String> login(@RequestBody UserCredentialsDTO credentials) {
 		try {
 			String jwt = userService.signin(credentials.getUsername(), credentials.getPassword());
+			setSession(credentials.getUsername());
 			return new ResponseEntity<>(jwt, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	private void setSession(String username) {
+		KieServices ks = KieServices.Factory.get();
+		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
+		kbconf.setOption(EventProcessingOption.STREAM);
+		KieBase kbase = kieContainer.newKieBase(kbconf);
+
+		KieSession kieSession = kbase.newKieSession();
+
+		session.setAttribute(username, kieSession);
+
 	}
 
 	@GetMapping(value = "/me")

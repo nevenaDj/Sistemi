@@ -31,8 +31,15 @@ export class AddUserComponent implements OnInit {
   save(){
     this.userService.addUser(this.user)
       .then(res => {
-        console.log(res);
-        this.router.navigate(['admin']);
+        this.toastr.success('Doktor uspešno upisan.');
+        this.user = {
+          username: '',
+          firstName: '',
+          lastName: '',
+          expertise: '',
+          roles: null
+        }
+        window.location.reload();
       })
       .catch(res => this.toastr.error('Korisničko ime je već upotrebljeno ili je prekratko (minimum 4 karaktera).'));
   }

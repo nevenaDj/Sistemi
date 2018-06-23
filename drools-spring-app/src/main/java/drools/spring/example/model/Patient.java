@@ -23,6 +23,10 @@ public class Patient {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User doctor;
 
+	public Patient() {
+
+	}
+
 	public Integer getId() {
 		return id;
 	}

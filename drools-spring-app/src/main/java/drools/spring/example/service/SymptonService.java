@@ -2,6 +2,7 @@ package drools.spring.example.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
@@ -71,7 +72,7 @@ public class SymptonService {
 		return symptomRepository.getDiseaseSymptoms(id);
 	}
 
-	public List<Symptom> getSymptomsShow() {
+	public Set<Symptom> getSymptomsShow() {
 		return diseaseSymptomRepository.getSymptomsShow();
 	}
 

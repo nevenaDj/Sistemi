@@ -1,0 +1,76 @@
+//created on: 16.06.2018.
+package drools.spring.rules
+
+import drools.spring.example.event.HeartRhythmEvent;
+import drools.spring.example.event.OxygenEvent;
+import drools.spring.example.event.OxygenLevelEvent;
+import drools.spring.example.event.HeartBeatEvent;
+import drools.spring.example.event.Event;
+import drools.spring.example.event.DialysisEvent;
+import drools.spring.example.model.PatientDisease;
+
+
+rule "U poslednjih 10 sekundi zabeleženo više od 25 otkucaja srca"
+	agenda-group "monitor"
+    when
+        $h1: HeartBeatEvent($pId: patientId)
+        Number(intValue >= 25) from accumulate(
+            $h2: HeartBeatEvent(
+                this != $h1, 
+                patientId == $pId, 
+                this meets[10s] $h1
+            ),
+            count($h2)
+        )
+    then
+        insert(new HeartRhythmEvent());
+        drools.halt();
+end
+
+
+rule "Problem sa kiseonikom"
+	agenda-group "monitor"
+    when
+        $o1: OxygenLevelEvent($pId: patientId, $ol : oxygenLevel, $ol < 70)
+        not(
+            OxygenLevelEvent (
+            	this != $o1, 
+            	patientId == $pId, 
+            	oxygenLevel > $ol)
+            	over window:time(15m)
+        )
+    then
+        insert(new OxygenEvent());
+        drools.halt();
+end
+
+
+rule "Hitno potrebna dijaliza"
+	agenda-group "monitor"
+	
+    when
+    	PatientDisease( disease.name == "hronicna bubrezna bolest", $pId : patient.id)
+        $h1: HeartBeatEvent($pId == patientId)
+        Number(intValue >= 10) from accumulate(
+            $h2: HeartBeatEvent(
+                this != $h1, 
+                patientId == $pId, 
+                this meets[10s] $h1
+            ),
+            count($h2)
+        )
+        
+        Number(intValue < 100) from accumulate(
+            $h2: Event(
+            	$q : quantity,
+                this != $h1, 
+                patientId == $pId, 
+                this meets[12h] $h1
+            ),
+            sum($q)
+        ) 
+    then
+        insert(new DialysisEvent());
+        drools.halt();
+end
+

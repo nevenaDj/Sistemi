@@ -1,0 +1,68 @@
+<br>
+<p style="font-size: 16px;">
+  <b style="color: black; font-size: 18px;">Pacijent: </b>
+     {{patient.firstName + " " + patient.lastName + " (K" + patient.id + ")"}}
+     &nbsp; &nbsp;
+     <button style="margin-right: 5%;" (click)="gotoPatientDetail()" name="btn_continuar" class="btn btn-primary right">Bolesti</button>
+</p>
+
+<br><br>
+<p> Alergije na: &nbsp; &nbsp;
+  <select (ngModelChange)="objChanged($event)" style="margin-top: -30px; margin-left: 100px; width: 150px;" id="perfil" name="perfil" class="form-control" [(ngModel)]="flag" [ngModelOptions]="{standalone: true}">
+    <!-- <option [ngValue]="true">Lekove</option>
+    <option [ngValue]="false">Sastojke lekova</option> -->
+    <option *ngFor="let c of values" [ngValue]="c.flag">{{c.name}}</option>
+  </select>
+  <button (click)="gotoAddAllergyCure()" *ngIf="flag" style="margin-top: -55px; margin-left: 280px;"  name="btn_continuar" class="btn btn-primary">Dodaj alergiju na lek</button>
+  <button (click)="gotoAddAllergyComponent()" *ngIf="!flag" style="margin-top: -55px; margin-left: 280px;"  name="btn_continuar" class="btn btn-primary">Dodaj alergiju na sastojak leka</button>
+</p>
+
+<br><br>
+<div class="container" *ngIf="flag">
+    <div class="table-wrapper">
+        <table style="margin-left: 20%; width: 40%;" class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>
+                &nbsp;
+              </th>
+              <th>Naziv leka</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of allergyCures | orderBy: 'cure.name': false">
+              <td>
+                &nbsp;
+              </td>
+              <td>{{c.cure.name}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="container" *ngIf="!flag">
+    <div class="table-wrapper">
+        <table style="margin-left: 20%; width: 40%;" class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>
+                &nbsp;
+              </th>
+              <th>Naziv sastojka leka</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of allergyComponents | orderBy: 'component.name': false">
+              <td>
+                &nbsp;
+              </td>
+              <td>{{c.component.name}}</td>
+            </tr>
+          </tbody>
+        </table>
+       
+      </div>
+    </div>
+
+

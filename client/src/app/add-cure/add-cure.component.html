@@ -14,7 +14,7 @@
   </div>
 
   <!-- Select Basic -->
-<div class="form-group">
+  <div class="form-group">
     <label class="col-md-4 control-label" for="perfil">Grupa</label>
     <div class="col-md-4">
       <select id="perfil" name="perfil" class="form-control" [(ngModel)]="cure.group" [ngModelOptions]="{standalone: true}">
@@ -26,7 +26,7 @@
   <div class="form-group">
       <label class="col-md-4 control-label">Sastojci  </label>
       <div class="col-md-4">
-          <select class="form-control selectpicker" multiple data-live-search="true" [(ngModel)]="cure.components" (ngModelChange)="objChanged($event)" [ngModelOptions]="{standalone: true}" multiple title="Sastojci leka" >
+          <select class="form-control selectpicker" multiple data-live-search="true" [(ngModel)]="cure.components" [ngModelOptions]="{standalone: true}" multiple title="Sastojci leka" >
               <option *ngFor="let c of components" [ngValue]="c">{{c.name}}</option>
           </select>
         </div>

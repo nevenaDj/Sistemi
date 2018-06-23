@@ -8,13 +8,21 @@ import drools.spring.example.model.PatientCure;
 import drools.spring.example.model.User;
 import java.util.Set;
 import java.util.List;
+import java.util.Date;
+
+global Date beforeDate;
+
 
 query "Spisak pacijenata sa mogucim hronicnim oboljenjima"  
-    patient : Patient( $idPatient : id )
-    disease : Disease( $idDisease : id , name not in ("prehlada", "groznica"))
+    $patient : Patient( $idPatient : id )
     Number(intValue >= 5) from accumulate(
-             $pd : PatientDisease( disease.id == $idDisease, patient.id == $idPatient,  dateBeforeMonth(24) ),
-            count($pd)
+             $pd : PatientDisease( 
+             	disease.name not in ("prehlada", "groznica"), 
+             	patient.id == $idPatient,  
+             	beforeDate != null,
+             	beforeDate.before(date) 
+             	),
+             count($pd)
         )
     
 end
@@ -25,12 +33,16 @@ query "Spisak mogucih zavisnika"
          
     $patientCure : List(size() >= 6) 
     from accumulate( 
-        $pd : PatientCure( cure.group.name == "analgetik", patientDisease.patient.id == $idPatient,  dateBeforeMonth(6)),
+        $pd : PatientCure( 
+        		cure.group.name == "analgetik", 
+        		patientDisease.patient.id == $idPatient,
+        		beforeDate != null,
+        		beforeDate.before(date)),
         collectList($pd)) 
         
     $doctors: Set(size() >= 3) 
     from accumulate (
-    	PatientCure( cure.group.name == "analgetik", patientDisease.patient.id == $idPatient,  dateBeforeMonth(6), $d : doctor ),
+    	PatientCure( cure.group.name == "analgetik", patientDisease.patient.id == $idPatient,  beforeDate.before(date), $d : doctor ),
     	collectSet($d)
     	)
     
@@ -39,17 +51,30 @@ end
 
 query "Spisak pacijenta sa oslabljenim imunitetom"  
     $patient : Patient( $idPatient : id )
-    not PatientCure( patientDisease.patient.id == $idPatient,  cure.group.name != "antibiotik",  dateBeforeMonth(12) )
+    not PatientCure( 
+    	patientDisease.patient.id == $idPatient,  
+    	cure.group.name != "antibiotik",  
+    	beforeDate != null, 
+    	beforeDate.before(date) )
     
-    $patientCure : List(size() >= 10) 
+    $patientCure : List(size() > 10) 
     from accumulate( 
-        $pd : PatientCure( cure.group.name == "antibiotik", patientDisease.patient.id == $idPatient,  dateBeforeMonth(12)),
+        $pd : PatientCure( 
+        	cure.group.name == "antibiotik", 
+        	patientDisease.patient.id == $idPatient,
+        	beforeDate != null,
+        	beforeDate.before(date)),
         collectList($pd)
         ) 
         
     $patientDisease :  Set(size() >= 2) 
     from accumulate (
-    	 PatientCure( $pd : patientDisease.disease, cure.group.name == "antibiotik",  patientDisease.patient.id == $idPatient, dateBeforeMonth(12) ),
+    	 PatientCure( 
+    	 	$pd : patientDisease.disease, 
+    	 	cure.group.name == "antibiotik",  
+    	 	patientDisease.patient.id == $idPatient, 
+    	 	beforeDate != null,
+    	 	beforeDate.before(date) ),
     	 collectSet($pd)
     	)
      	  

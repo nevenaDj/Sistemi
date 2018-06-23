@@ -1,0 +1,23 @@
+//created on: 19.06.2018.
+package drools.spring.rules
+
+import drools.spring.example.model.DiseaseSymptom;
+import drools.spring.example.model.Symptom;
+import java.util.Set;
+
+
+query "Pretraga simptoma"  (String $diseaseName)
+    $diseaseSymptom : DiseaseSymptom(disease.name == $diseaseName )
+      
+end
+
+
+query "Pretraga bolesti"  
+	Symptom( $idSymptom : id) 
+     $diseases: Set() 
+    from accumulate (
+    	DiseaseSymptom( $d : disease, symptom.id == $idSymptom ),
+    	collectSet($d)
+    	)
+    	    
+end

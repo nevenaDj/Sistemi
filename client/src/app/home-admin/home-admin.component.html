@@ -20,9 +20,11 @@
             <li class="dropdown" dropdown [dropdownToggle]="true" >
                 <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Prikaz <span class="caret"></span></a>
                 <ul class="dropdown-menu dropdown-button" >
-                    <li class="dropdown-button"><a [routerLink]="['/admin']">Doktora</a></li>
-                    <li class="dropdown-button"><a [routerLink]="['/admin']">Bolesti</a></li>
+                    <li class="dropdown-button"><a [routerLink]="['/admin/doctors']">Doktora</a></li>
+                    <li class="dropdown-button"><a [routerLink]="['/admin/diseases']">Bolesti</a></li>
+                    <li class="dropdown-button"><a [routerLink]="['/admin/symptoms']">Simptoma</a></li>
                     <li class="dropdown-button"><a [routerLink]="['/admin/cures']">Lekova</a></li>
+                    <li class="dropdown-button"><a [routerLink]="['/admin/components']">Sastojaka</a></li>
                 </ul>
               </li>
               <li><a [routerLink]="['/admin/password']">Promena lozinke</a></li>

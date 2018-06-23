@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
             }
             else if (me.roles.includes('ROLE_DOCTOR')){
-              this.router.navigate(['/home']);
+              this.router.navigate(['/home/patients/search']);
             }
           })
          )

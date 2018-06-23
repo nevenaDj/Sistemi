@@ -1,0 +1,33 @@
+<br><br><br><br><br><br>
+<div class="container" *ngIf="patients.length > 0">
+  <div class="table-wrapper">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>
+              &nbsp;
+            </th>
+            <th>Broj kartona</th>
+            <th>Ime pacijenta</th>
+            <th>Prezime pacijenta</th>
+            <th>Doktor</th>
+            <th>Akcija</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let patient of patients">
+            <td>
+              &nbsp;
+            </td>
+            <td>{{'K' + patient.id}}</td>
+            <td>{{patient.firstName}}</td>
+            <td>{{patient.lastName}}</td>
+            <td>{{patient.doctor.firstName + " " + patient.doctor.lastName}}</td>
+            <td>
+              <button (click)="gotoPatientDetail(patient.id)" class="btn btn-primary">Prikaži karton</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

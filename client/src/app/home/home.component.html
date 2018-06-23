@@ -10,21 +10,23 @@
           <nav>
             <ul class="nav navbar-nav f">
             <li class="dropdown" dropdown [dropdownToggle]="true" >
-              <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Upis <span class="caret"></span></a>
+              <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Pacijenti <span class="caret"></span></a>
               <ul class="dropdown-menu" >
-                  <li cclass="dropdown-item"><a [routerLink]="['/home/patient']">Pacijenta</a></li>
-                  <li class="dropdown-item"><a [routerLink]="['/home']">Bolesti</a></li>
+                  <li class="dropdown-button"><a [routerLink]="['/home/patients/search']">Pretraga</a></li>
+                  <li class="dropdown-button"><a [routerLink]="['/home/patients']">Prikaz</a></li>
+                  <li class="dropdown-item"><a [routerLink]="['/home/patients/add']">Upis</a></li>
               </ul>
             </li>
             <li class="dropdown" dropdown [dropdownToggle]="true" >
-                <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Pretrazi <span class="caret"></span></a>
-                <ul class="dropdown-menu dropdown-button" >
-                    <li class="dropdown-button"><a [routerLink]="['/home']">Pacijente</a></li>
-                    <li class="dropdown-button"><a [routerLink]="['/home']">Bolesti</a></li>
-                </ul>
-              </li>
-              <li><a [routerLink]="['/home/password']">Promeni lozinku</a></li>
-              <li><a (click) ="logout()">Odjavi se</a></li>
+              <a  class="btn btn-secondary dropdown-toggle"  dropdown-open> Izveštaji <span class="caret"></span></a>
+              <ul class="dropdown-menu" >
+                  <li class="dropdown-button"><a [routerLink]="['/home/report1']">Pacijenti sa mogućim hroničnim oboljenjima</a></li>
+                  <li class="dropdown-item"><a [routerLink]="['/home/report2']">Mogući zavisnici</a></li>
+                  <li class="dropdown-item"><a [routerLink]="['/home/report3']">Pacijenti sa oslabljenim imunitetom</a></li>
+              </ul>
+            </li>
+              <li><a [routerLink]="['/home/password']">Promena lozinke</a></li>
+              <li><a (click) ="logout()">Odjava</a></li>
             </ul>
           </nav>
           

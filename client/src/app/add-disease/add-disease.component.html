@@ -27,6 +27,20 @@
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Dodaj</button>
        novi </p>  
   </div>
+
+  <div *ngIf="disease.symptoms.length > 0" class="form-group">
+      <label class="control-label izsimptom">Izabrani simptomi &nbsp; &nbsp; &nbsp; Specifičan  </label>
+  </div>  
+
+  <div class="form-group" >
+      <p class="control-label izsimp" *ngFor="let c of disease.symptoms">{{c.name}} 
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          <span class="custom-checkbox">
+              <input type="checkbox" id="checkbox1" name="isChecked" [(ngModel)]="c.specificSymptom">
+              <label for="checkbox1"></label>
+            </span>
+      </p>  
+  </div>
   
   <!-- Button -->
   <div class="form-group">

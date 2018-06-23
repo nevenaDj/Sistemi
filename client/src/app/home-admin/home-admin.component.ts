@@ -20,4 +20,10 @@ export class HomeAdminComponent implements OnInit {
   logout(){
     this.auth.logout();
   }
+
+  /*ngAfterContentInit() {
+    document.getElementById('preloader').classList.add('hide');
+    jQuery('select').selectpicker();
+  } 
+  */
 }

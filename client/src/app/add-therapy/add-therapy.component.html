@@ -1,0 +1,38 @@
+<br>
+<form style="margin-left: -100px;" class="form-horizontal" name="form" (ngSubmit)="save()">
+    <fieldset>
+    
+    <!-- Form Name -->
+    <legend class="leg">Prepiši terapiju</legend>
+    <br>
+    
+    <div class="form-group">
+      <label class="col-md-4 control-label">Lek </label>
+      <div class="col-md-4">
+          <select class="form-control selectpicker" multiple data-live-search="true" [(ngModel)]="selectedCures" [ngModelOptions]="{standalone: true}" title="Lekovi.." >
+              <option *ngFor="let c of cures" [ngValue]="c">{{c.name}}</option>
+          </select>
+        </div>
+    </div>  
+    
+    <!-- Button -->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="btn_continuar"></label>
+      <div class="col-md-4">
+        <button type="submit" name="btn_continuar" class="btn btn-primary right">Sačuvaj</button>
+      </div>
+    </div>
+    <br><br>
+    <div class="form-group" >
+      <p class="control-label simp">Dodaj alergiju pacijenta na:
+           </p>  
+    </div>
+    <div class="form-group" >
+      <p class="control-label simp">
+        <button type="button" class="btn btn-primary" (click)="gotoAddAllergyCure()">Lek</button> 
+        <button type="button" class="btn btn-primary" (click)="gotoAddAllergyComponent()">Sastojak leka</button> 
+      </p>  
+    </div>
+    
+    </fieldset>
+</form>

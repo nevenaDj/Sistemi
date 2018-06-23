@@ -54,7 +54,14 @@ export class AddCureComponent implements OnInit {
 
 
   ngOnInit() {
+    if(window.location.href.indexOf("loaded") > -1) {}
+    else{
+      let win = (window as any);
+      win.location.href = "/#/admin/cure/loaded";
+      win.location.reload();
+    }
   }
+
 
   ngAfterViewInit() {
     document.getElementById('preloader').classList.add('hide');
@@ -64,17 +71,30 @@ export class AddCureComponent implements OnInit {
 
   save(){
     this.cureService.addCure(this.cure)
-        .then(res => this.router.navigate(['/admin']));
+        .then(res => {
+          this.toastr.success('Lek uspešno upisan.');
+          this.cure = {
+            id: null,
+            name: '',
+            group: null,
+            components: [
+              {
+                id: null,
+                name: ''
+              }
+            ]
+          };
+          window.location.reload();
+        }).catch(res => this.toastr.error('Prilikom upisa leka došlo je do greške.'));
   }
 
 
   saveComponent(){
     this.componentService.addComponent(this.component)
         .then(res => {
-          this.toastr.info('Sastojak leka uspešno upisan.');
+          this.toastr.success('Sastojak leka uspešno upisan.');
           this.component.name = '';
           window.location.reload();
-        });
+        }).catch(res => this.toastr.error('Prilikom upisa sastojka došlo je do greške.'));
   }
-
 }

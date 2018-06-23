@@ -1,8 +1,11 @@
 package drools.spring.example.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,12 +80,35 @@ public class DiseaseService {
 	}
 
 	public Disease findDisease(List<Symptom> symptoms, Patient patient) {
+		Date today = new Date();
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -60);
+		Date before60days = cal.getTime();
+
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -14);
+		Date before14days = cal.getTime();
+
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -21);
+		Date before21days = cal.getTime();
+
+		cal.setTime(today);
+		cal.add(Calendar.MONTH, -6);
+		Date before6month = cal.getTime();
+
 		KieServices ks = KieServices.Factory.get();
 		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
 		kbconf.setOption(EventProcessingOption.STREAM);
 		KieBase kbase = kieContainer.newKieBase(kbconf);
 
 		KieSession kieSession = kbase.newKieSession();
+
+		kieSession.setGlobal("before60days", before60days);
+		kieSession.setGlobal("before14days", before14days);
+		kieSession.setGlobal("before21days", before21days);
+		kieSession.setGlobal("before6month", before6month);
 
 		List<Disease> diseases = diseaseRepository.findAll();
 		addFactInMemory(kieSession, symptoms, patient, diseases);

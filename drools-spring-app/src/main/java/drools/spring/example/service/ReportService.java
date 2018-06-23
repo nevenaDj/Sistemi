@@ -1,6 +1,9 @@
 package drools.spring.example.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +23,6 @@ import drools.spring.example.model.Patient;
 import drools.spring.example.model.PatientCure;
 import drools.spring.example.model.PatientDisease;
 import drools.spring.example.model.User;
-import drools.spring.example.repository.DiseaseRepository;
 import drools.spring.example.repository.PatientCureRepository;
 import drools.spring.example.repository.PatientDiseaseRepsoitory;
 import drools.spring.example.repository.PatientRepository;
@@ -38,18 +40,23 @@ public class ReportService {
 	private PatientCureRepository patientCureRepository;
 
 	@Autowired
-	private DiseaseRepository diseaseRepository;
-
-	@Autowired
 	private KieContainer kieContainer;
 
 	public List<Patient> getReport1() {
+		Date today = new Date();
+		Calendar cal = new GregorianCalendar();
+
+		cal.setTime(today);
+		cal.add(Calendar.MONTH, -24);
+		Date before2years = cal.getTime();
+
 		KieServices ks = KieServices.Factory.get();
 		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
 		kbconf.setOption(EventProcessingOption.STREAM);
 		KieBase kbase = kieContainer.newKieBase(kbconf);
 
 		KieSession kieSession = kbase.newKieSession();
+		kieSession.setGlobal("beforeDate", before2years);
 
 		addFactInMemory1(kieSession);
 
@@ -58,10 +65,10 @@ public class ReportService {
 
 		List<Patient> patientDiseasesResult = new ArrayList<>();
 		for (QueryResultsRow row : results) {
-			Patient patient = (Patient) row.get("patient");
-			Disease disease = (Disease) row.get("disease");
+			Patient patient = (Patient) row.get("$patient");
+
 			System.out.println(patient.getFirstName());
-			System.out.println(disease.getName());
+
 			patientDiseasesResult.add(patient);
 		}
 
@@ -71,12 +78,19 @@ public class ReportService {
 	}
 
 	public List<Patient> getReport2() {
+		Date today = new Date();
+		Calendar cal = new GregorianCalendar();
+
+		cal.setTime(today);
+		cal.add(Calendar.MONTH, -6);
+		Date before6month = cal.getTime();
 		KieServices ks = KieServices.Factory.get();
 		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
 		kbconf.setOption(EventProcessingOption.STREAM);
 		KieBase kbase = kieContainer.newKieBase(kbconf);
 
 		KieSession kieSession = kbase.newKieSession();
+		kieSession.setGlobal("beforeDate", before6month);
 
 		addFactInMemory(kieSession);
 
@@ -110,12 +124,19 @@ public class ReportService {
 	}
 
 	public List<Patient> getReport3() {
+		Date today = new Date();
+		Calendar cal = new GregorianCalendar();
+
+		cal.setTime(today);
+		cal.add(Calendar.MONTH, -12);
+		Date before12month = cal.getTime();
 		KieServices ks = KieServices.Factory.get();
 		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
 		kbconf.setOption(EventProcessingOption.STREAM);
 		KieBase kbase = kieContainer.newKieBase(kbconf);
 
 		KieSession kieSession = kbase.newKieSession();
+		kieSession.setGlobal("beforeDate", before12month);
 
 		addFactInMemory(kieSession);
 
@@ -173,12 +194,6 @@ public class ReportService {
 
 		for (PatientDisease patientDisease : patientDiseases) {
 			kieSession.insert(patientDisease);
-		}
-
-		List<Disease> diseases = diseaseRepository.findAll();
-
-		for (Disease disease : diseases) {
-			kieSession.insert(disease);
 		}
 	}
 
